@@ -34,6 +34,33 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Toast.makeText(MainActivity.this, "تطبيق لتحفيظ القرآن للأطفال", Toast.LENGTH_SHORT).show();
             }
+            @Override
+            public boolean onCreateOptionsMenu(Menu menu) {
+                getMenuInflater().inflate(R.menu.menu, menu);
+                return true;
+            }
+            @Override
+            public boolean onOptionsItemSelected(MenuItem item) {
+
+                int id = item.getItemId();
+
+                if (id == R.id.menu_settings) {
+                    Intent intent = new Intent(this, SettingsActivity.class);
+                    startActivity(intent);
+                    return true;
+
+                } else if (id == R.id.menu_about) {
+                    Intent intent = new Intent(this, AboutActivity.class);
+                    startActivity(intent);
+                    return true;
+
+                } else if (id == R.id.menu_mode) {
+                    Toast.makeText(this, "Mode Changed!", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+
+                return super.onOptionsItemSelected(item);
+            }
         });
     }
 }
