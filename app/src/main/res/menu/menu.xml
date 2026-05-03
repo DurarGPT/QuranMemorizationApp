@@ -9,8 +9,4 @@
         android:id="@+id/menu_about"
         android:title="About" />
 
-    <item
-        android:id="@+id/menu_mode"
-        android:title="Child Mode / Night Mode" />
-
 </menu>

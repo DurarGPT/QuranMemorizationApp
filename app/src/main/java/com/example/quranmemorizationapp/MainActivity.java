@@ -6,8 +6,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
         btnStart = findViewById(R.id.btnStart);
         btnAbout = findViewById(R.id.btnAbout);
 
-        // زر بدء الحفظ
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -31,24 +30,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // زر حول التطبيق
         btnAbout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AboutActivity.class);
-                startActivity(intent);
+                showAboutDialog();
             }
         });
     }
 
-    // 🔹 هنا مكان المينيو (مو داخل الزر!)
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
-    // 🔹 التعامل مع الضغط على عناصر المينيو
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -58,17 +53,21 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(intent);
             return true;
+        }
 
-        } else if (id == R.id.menu_about) {
-            Intent intent = new Intent(MainActivity.this, AboutActivity.class);
-            startActivity(intent);
-            return true;
-
-        } else if (id == R.id.menu_mode) {
-            Toast.makeText(MainActivity.this, "Mode Changed!", Toast.LENGTH_SHORT).show();
+        if (id == R.id.menu_about) {
+            showAboutDialog();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showAboutDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("About App");
+        builder.setMessage("Noor Al-Tifl helps children memorize Quran verses by selecting a verse range and repeating it in a simple way.");
+        builder.setPositiveButton("OK", null);
+        builder.show();
     }
 }
