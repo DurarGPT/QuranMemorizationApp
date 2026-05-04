@@ -7,11 +7,22 @@
     android:gravity="center"
     android:padding="24dp">
 
+    <TextView
+        android:id="@+id/tvCurrentAyah"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="جاهز للتكرار"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:textColor="#2E7D32"
+        android:layout_marginBottom="40dp"
+        android:padding="16dp"/>
+
     <Button
         android:id="@+id/btnStart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="بدء الحفظ"
+        android:text="بدء التكرار"
         android:textSize="20sp"
         android:padding="12dp"/>
 

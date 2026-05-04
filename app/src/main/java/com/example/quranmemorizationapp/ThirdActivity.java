@@ -1,86 +1,133 @@
 package com.example.quranmemorizationapp;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class ThirdActivity extends AppCompatActivity {
 
-    Button btnPlay;
-    Button btnPause;
-    Button btnNext;
-    Button btnPrevious;
+    Button btnPlay, btnPause, btnNext, btnPrevious;
+    TextView tvDisplay;
+
+
+    int startAyah, endAyah, repeatLimit;
+    int currentAyah;
+    int currentRepeatCount = 1;
+
+    Handler handler = new Handler();
+    boolean isPaused = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_third);
 
-        // ربط الأزرار
         btnPlay = findViewById(R.id.btnPlay);
         btnPause = findViewById(R.id.btnPause);
         btnNext = findViewById(R.id.btnNext);
         btnPrevious = findViewById(R.id.btnPrevious);
+        tvDisplay = findViewById(R.id.tvDisplay);
 
-        // زر Play
+
+        try {
+            startAyah = Integer.parseInt(getIntent().getStringExtra("FROM_AYAH"));
+            endAyah = Integer.parseInt(getIntent().getStringExtra("TO_AYAH"));
+            repeatLimit = Integer.parseInt(getIntent().getStringExtra("REPEAT_LIMIT"));
+            currentAyah = startAyah;
+        } catch (Exception e) {
+
+            startAyah = 1; endAyah = 5; repeatLimit = 1;
+            currentAyah = startAyah;
+        }
+
+
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Toast.makeText(
-                        ThirdActivity.this,
-                        "Play button clicked",
-                        Toast.LENGTH_SHORT
-                ).show();
-
+                if (isPaused) {
+                    isPaused = false;
+                    runRepetitionLogic();
+                    Toast.makeText(ThirdActivity.this, "تم الاستئناف", Toast.LENGTH_SHORT).show();
+                } else {
+                    currentAyah = startAyah;
+                    currentRepeatCount = 1;
+                    runRepetitionLogic();
+                }
             }
         });
 
-        // زر Pause
+
         btnPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Toast.makeText(
-                        ThirdActivity.this,
-                        "Pause button clicked",
-                        Toast.LENGTH_SHORT
-                ).show();
-
+                isPaused = true;
+                handler.removeCallbacksAndMessages(null);
+                Toast.makeText(ThirdActivity.this, "إيقاف مؤقت", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // زر Next
+
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Toast.makeText(
-                        ThirdActivity.this,
-                        "Next Ayah",
-                        Toast.LENGTH_SHORT
-                ).show();
-
+                if (currentAyah < endAyah) {
+                    currentAyah++;
+                    updateUI();
+                }
             }
         });
 
-        // زر Previous
         btnPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Toast.makeText(
-                        ThirdActivity.this,
-                        "Previous Ayah",
-                        Toast.LENGTH_SHORT
-                ).show();
-
+                if (currentAyah > startAyah) {
+                    currentAyah--;
+                    updateUI();
+                }
             }
         });
+    }
 
+    private void runRepetitionLogic() {
+        if (isPaused) return;
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (currentRepeatCount <= repeatLimit) {
+                    if (currentAyah <= endAyah) {
+                        updateUI();
+                        currentAyah++;
+                        handler.postDelayed(this, 3000); // تكرار كل 3 ثوانٍ
+                    } else {
+                        currentRepeatCount++;
+                        currentAyah = startAyah;
+                        handler.post(this);
+                    }
+                } else {
+                    tvDisplay.setText("تم الانتهاء!");
+                    handler.removeCallbacks(this);
+                }
+            }
+        };
+        handler.post(runnable);
+    }
+
+    private void updateUI() {
+        if (tvDisplay != null) {
+            tvDisplay.setText("التكرار: " + currentRepeatCount + " / " + repeatLimit +
+                    "\nالآية الحالية: " + currentAyah);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacksAndMessages(null);
     }
 }
