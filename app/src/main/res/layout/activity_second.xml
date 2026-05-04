@@ -1,27 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:gravity="center"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp">
 
     <TextView
-        android:text="Select Range"
-        android:textSize="18sp"
-        android:layout_marginBottom="10dp"
+        android:text="Memorization Control"
+        android:textSize="20sp"
         android:textStyle="bold"
+        android:layout_marginBottom="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <NumberPicker
-        android:id="@+id/npFrom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/btnPlay"
+        android:text="Play"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"/>
 
-    <NumberPicker
-        android:id="@+id/npTo"
+    <Button
+        android:id="@+id/btnPause"
+        android:text="Pause"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"/>
+
+    <Button
+        android:id="@+id/btnNext"
+        android:text="Next"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"/>
+
+    <Button
+        android:id="@+id/btnPrev"
+        android:text="Previous"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"/>
+
+    <TextView
+        android:text="Repeat Count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
@@ -30,23 +53,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <Button
-        android:id="@+id/btnStartRepeat"
-        android:text="Start"
-        android:layout_marginTop="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <Button
-        android:id="@+id/btnStop"
-        android:text="Stop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
     <TextView
-        android:id="@+id/tvResult"
-        android:text="Result"
-        android:textSize="18sp"
+        android:id="@+id/tvStatus"
+        android:text="Status"
+        android:textSize="16sp"
         android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
