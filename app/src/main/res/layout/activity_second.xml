@@ -1,90 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="24dp"
-    android:background="#F9F5FF">
+    android:padding="16dp"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <!-- Title -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="صفحة الحفظ"
-        android:textSize="26sp"
+        android:text="Select Range"
+        android:textSize="18sp"
+        android:layout_marginBottom="10dp"
         android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginBottom="20dp"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
-    <!-- From -->
-    <EditText
-        android:id="@+id/etFrom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="من آية"
-        android:inputType="number"
-        android:padding="12dp"
-        android:background="@android:drawable/edit_text"
-        android:layout_marginBottom="10dp"/>
+    <NumberPicker
+        android:id="@+id/npFrom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
-    <!-- To -->
-    <EditText
-        android:id="@+id/etTo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="إلى آية"
-        android:inputType="number"
-        android:padding="12dp"
-        android:background="@android:drawable/edit_text"
-        android:layout_marginBottom="10dp"/>
+    <NumberPicker
+        android:id="@+id/npTo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
-    <!-- Repeat -->
-    <EditText
-        android:id="@+id/etRepeat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="عدد التكرار"
-        android:inputType="number"
-        android:padding="12dp"
-        android:background="@android:drawable/edit_text"
-        android:layout_marginBottom="20dp"/>
+    <NumberPicker
+        android:id="@+id/npRepeat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
-    <!-- Buttons row -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+    <Button
+        android:id="@+id/btnStartRepeat"
+        android:text="Start"
+        android:layout_marginTop="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
-        <Button
-            android:id="@+id/btnPrevious"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="السابق"/>
+    <Button
+        android:id="@+id/btnStop"
+        android:text="Stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
-        <Button
-            android:id="@+id/btnPlay"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="تشغيل"/>
-
-        <Button
-            android:id="@+id/btnPause"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="إيقاف"/>
-
-        <Button
-            android:id="@+id/btnNext"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="التالي"/>
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tvResult"
+        android:text="Result"
+        android:textSize="18sp"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

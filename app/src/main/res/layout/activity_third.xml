@@ -7,7 +7,7 @@
     android:padding="20dp"
     android:gravity="center">
 
-    <!-- العنوان -->
+
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
@@ -17,7 +17,7 @@
         android:textStyle="bold"
         android:layout_marginBottom="10dp"/>
 
-    <!-- شاشة العرض (هذا هو العنصر الذي كان ناقصاً ويسبب الخطأ) -->
+
     <TextView
         android:id="@+id/tvDisplay"
         android:layout_width="wrap_content"
@@ -29,7 +29,7 @@
         android:layout_marginBottom="30dp"
         android:gravity="center"/>
 
-    <!-- الأزرار -->
+
     <Button
         android:id="@+id/btnPlay"
         android:layout_width="match_parent"
