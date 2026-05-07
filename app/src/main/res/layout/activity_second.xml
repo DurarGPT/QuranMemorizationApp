@@ -48,6 +48,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
+    <!-- From Ayah -->
+    <EditText
+        android:id="@+id/etFromAyah"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="From Ayah"
+        android:inputType="number"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="10dp"/>
+
+    <!-- To Ayah -->
+    <EditText
+        android:id="@+id/etToAyah"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="To Ayah"
+        android:inputType="number"
+        android:layout_marginBottom="20dp"/>
+
     <NumberPicker
         android:id="@+id/npRepeat"
         android:layout_width="wrap_content"
