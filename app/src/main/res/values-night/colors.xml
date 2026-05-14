@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="teal_main">#20B2AA</color>
+    <color name="teal_dark">#5EEAD4</color>
+
+    <color name="purple_main">#C4B5FD</color>
+    <color name="purple_light">#4B3F72</color>
+
+    <color name="background_light">#20242A</color>
+    <color name="background_dark">#20242A</color>
+
+    <color name="card_light">#2D333B</color>
+    <color name="card_dark">#2D333B</color>
+
+    <color name="text_dark">#F5F5F5</color>
+    <color name="text_light">#FFFFFF</color>
+
+    <color name="text_gray">#D1D5DB</color>
+
+</resources>

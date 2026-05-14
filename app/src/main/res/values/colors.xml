@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+
+    <!-- Main Colors -->
+    <color name="teal_main">#20B2AA</color>
+    <color name="teal_dark">#128C85</color>
+
+    <color name="purple_main">#8E7CC3</color>
+    <color name="purple_light">#DCCEF9</color>
+
+    <!-- Backgrounds -->
+    <color name="background_light">#F5FFFD</color>
+    <color name="background_dark">#2E3138</color>
+
+    <!-- Cards -->
+    <color name="card_light">#FFFFFF</color>
+    <color name="card_dark">#3B3F48</color>
+
+    <!-- Text -->
+    <color name="text_dark">#263238</color>
+    <color name="text_light">#FFFFFF</color>
+    <color name="text_gray">#6B7280</color>
+
+    <!-- Extra -->
+    <color name="soft_gold">#F4D06F</color>
+
 </resources>

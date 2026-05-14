@@ -1,22 +1,98 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="24dp">
+    android:background="@color/background_light">
 
-    <Button
-        android:id="@+id/btnStart"
-        android:text="بدء الحفظ"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"/>
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal">
 
-    <Button
-        android:id="@+id/btnAbout"
-        android:text="حول التطبيق"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        <ImageView
+            android:id="@+id/imgLogo"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            android:src="@drawable/qiraati_logo"
+            android:scaleType="fitCenter"
+            android:layout_marginTop="10dp"/>
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Qiraati"
+            android:textColor="@color/teal_dark"
+            android:textStyle="bold"
+            android:textSize="34sp"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/tvSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="A joyful Quran memorization journey for children"
+            android:textColor="@color/text_gray"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="30dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_background"
+            android:elevation="6dp"
+            android:padding="24dp">
+
+            <Button
+                android:id="@+id/btnStart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Start Memorizing"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:textColor="@color/text_light"
+                android:background="@drawable/rounded_button"
+                android:layout_marginBottom="14dp"/>
+
+            <Button
+                android:id="@+id/btnAbout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="About App"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:textColor="@color/text_light"
+                android:background="@drawable/rounded_button"
+                android:layout_marginBottom="14dp"/>
+
+            <Button
+                android:id="@+id/btnSettings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Settings"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:textColor="@color/text_light"
+                android:background="@drawable/rounded_button"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvBottomText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Learn • Repeat • Memorize"
+            android:textColor="@color/purple_main"
+            android:textStyle="italic"
+            android:textSize="16sp"
+            android:layout_marginTop="30dp"/>
+
+    </LinearLayout>
+
+</ScrollView>

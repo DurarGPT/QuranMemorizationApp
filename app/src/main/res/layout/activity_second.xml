@@ -1,83 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp">
+    android:background="@color/background_light">
 
-    <TextView
-        android:text="Memorization Control"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <Button
-        android:id="@+id/btnPlay"
-        android:text="Play"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"/>
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal">
 
-    <Button
-        android:id="@+id/btnPause"
-        android:text="Pause"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"/>
+        <!-- Back Button -->
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="← Back"
+            android:textAllCaps="false"
+            android:textColor="@color/text_light"
+            android:background="@drawable/rounded_button"
+            android:layout_gravity="start"
+            android:layout_marginBottom="18dp"/>
 
-    <Button
-        android:id="@+id/btnNext"
-        android:text="Next"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"/>
+        <!-- Title -->
+        <TextView
+            android:id="@+id/tvSecondTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📖 Memorization Control"
+            android:textColor="@color/teal_dark"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="8dp"/>
 
-    <Button
-        android:id="@+id/btnPrev"
-        android:text="Previous"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"/>
+        <!-- Subtitle -->
+        <TextView
+            android:id="@+id/tvSecondSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose your ayah range and repeat count"
+            android:textColor="@color/text_gray"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:layout_marginBottom="22dp"/>
 
-    <TextView
-        android:text="Repeat Count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        <!-- Main Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_background"
+            android:elevation="6dp"
+            android:padding="22dp">
 
-    <!-- From Ayah -->
-    <EditText
-        android:id="@+id/etFromAyah"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="From Ayah"
-        android:inputType="number"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="10dp"/>
+            <!-- From Ayah -->
+            <EditText
+                android:id="@+id/etFromAyah"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="From Ayah"
+                android:inputType="number"
+                android:layout_marginBottom="12dp"/>
 
-    <!-- To Ayah -->
-    <EditText
-        android:id="@+id/etToAyah"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="To Ayah"
-        android:inputType="number"
-        android:layout_marginBottom="20dp"/>
+            <!-- To Ayah -->
+            <EditText
+                android:id="@+id/etToAyah"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="To Ayah"
+                android:inputType="number"
+                android:layout_marginBottom="18dp"/>
 
-    <NumberPicker
-        android:id="@+id/npRepeat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+            <!-- Repeat Count -->
+            <TextView
+                android:id="@+id/tvRepeatLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Repeat Count"
+                android:textColor="@color/text_dark"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"/>
 
-    <TextView
-        android:id="@+id/tvStatus"
-        android:text="Status"
-        android:textSize="16sp"
-        android:layout_marginTop="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+            <!-- Number Picker -->
+            <NumberPicker
+                android:id="@+id/npRepeat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"/>
 
-</LinearLayout>
+            <!-- Status -->
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ready to start"
+                android:textColor="@color/purple_main"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginTop="18dp"
+                android:layout_marginBottom="18dp"/>
+
+            <!-- Play -->
+            <Button
+                android:id="@+id/btnPlay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="▶ Play"
+                android:textAllCaps="false"
+                android:textSize="17sp"
+                android:textColor="@color/text_light"
+                android:background="@drawable/rounded_button"
+                android:layout_marginBottom="10dp"/>
+
+            <!-- Pause -->
+            <Button
+                android:id="@+id/btnPause"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="⏸ Pause"
+                android:textAllCaps="false"
+                android:textSize="17sp"
+                android:textColor="@color/text_light"
+                android:background="@drawable/rounded_button"
+                android:layout_marginBottom="10dp"/>
+
+            <!-- Next -->
+            <Button
+                android:id="@+id/btnNext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="➡ Next"
+                android:textAllCaps="false"
+                android:textSize="17sp"
+                android:textColor="@color/text_light"
+                android:background="@drawable/rounded_button"
+                android:layout_marginBottom="10dp"/>
+
+            <!-- Previous -->
+            <Button
+                android:id="@+id/btnPrev"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="⬅ Previous"
+                android:textAllCaps="false"
+                android:textSize="17sp"
+                android:textColor="@color/text_light"
+                android:background="@drawable/rounded_button"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

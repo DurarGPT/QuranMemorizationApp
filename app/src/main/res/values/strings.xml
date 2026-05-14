@@ -1,3 +1,36 @@
 <resources>
-    <string name="app_name">QuranMemorizationApp</string>
+    <string name="app_name">Qiraati — قراءتي</string>
+
+    <string name="home_title">Qiraati</string>
+    <string name="home_title_ar">قراءتي</string>
+    <string name="home_subtitle">A joyful Quran memorization journey for children</string>
+    <string name="home_subtitle_ar">رحلة ممتعة لحفظ القرآن للأطفال</string>
+
+    <string name="start_memorizing">Start Memorizing</string>
+    <string name="start_memorizing_ar">ابدأ الحفظ</string>
+
+    <string name="about_app">About App</string>
+    <string name="about_app_ar">حول التطبيق</string>
+
+    <string name="settings">Settings</string>
+    <string name="settings_ar">الإعدادات</string>
+
+    <string name="about_title">About Qiraati</string>
+    <string name="about_message">Qiraati is a simple and child-friendly Quran memorization app. It helps children choose an ayah range, repeat verses, and practice memorization in an organized and calming way.</string>
+
+    <string name="memorization_control">Memorization Control</string>
+    <string name="from_ayah">From Ayah</string>
+    <string name="to_ayah">To Ayah</string>
+    <string name="repeat_count">Repeat Count</string>
+
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="status_ready">Ready to start</string>
+
+    <string name="dark_mode">Dark Mode</string>
+    <string name="language">Language</string>
+    <string name="text_size">Text Size</string>
+    <string name="preview_text">Preview Text</string>
 </resources>
