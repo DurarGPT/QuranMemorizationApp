@@ -147,6 +147,35 @@ public class DBHelper extends SQLiteOpenHelper {
         return list;
     }
 
+    // GIRL 4: Get one verse from SQLite for the display screen.
+    public Verse getVerseByAyahNumber(int ayahNumber) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor c = db.rawQuery(
+                "SELECT surah_number, ayah_number, page_number, text_ar " +
+                        "FROM verses WHERE ayah_number = ? LIMIT 1",
+                new String[]{String.valueOf(ayahNumber)}
+        );
+
+        Verse verse = null;
+
+        if (c.moveToFirst()) {
+
+            verse = new Verse(
+                    c.getInt(0),
+                    c.getInt(1),
+                    c.getInt(2),
+                    c.getString(3)
+            );
+        }
+
+        c.close();
+        db.close();
+
+        return verse;
+    }
+
     // SAVE USER PROGRESS
     public void saveProgress(int surah,
                              int ayah) {

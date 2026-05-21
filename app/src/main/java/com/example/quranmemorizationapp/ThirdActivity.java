@@ -19,11 +19,13 @@ import com.bumptech.glide.Glide;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.Locale;
+
 public class ThirdActivity extends AppCompatActivity {
 
     Button btnPlay, btnPause, btnNext, btnPrevious;
 
-    TextView tvDisplay;
+    TextView tvDisplay, tvPageInfo, tvLastProgress;
 
     ImageView imgPage;
 
@@ -32,6 +34,12 @@ public class ThirdActivity extends AppCompatActivity {
     int currentAyah;
 
     int currentRepeatCount = 1;
+
+    int currentSurahNumber = 1;
+
+    int currentAyahInSurah = 1;
+
+    int currentPageNumber = 1;
 
     Handler handler = new Handler();
 
@@ -42,6 +50,8 @@ public class ThirdActivity extends AppCompatActivity {
     String currentAudioUrl = "";
 
     String currentAyahText = "";
+
+    DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +70,15 @@ public class ThirdActivity extends AppCompatActivity {
 
         tvDisplay = findViewById(R.id.tvDisplay);
 
+        tvPageInfo = findViewById(R.id.tvPageInfo);
+
+        tvLastProgress = findViewById(R.id.tvLastProgress);
+
         imgPage = findViewById(R.id.imgPage);
+
+        dbHelper = new DBHelper(this);
+
+        updateLastProgressText();
 
         try {
 
@@ -92,7 +110,7 @@ public class ThirdActivity extends AppCompatActivity {
             currentAyah = startAyah;
         }
 
-        // تحميل أول آية وصورة مباشرة
+        // GIRL 4: Load the first ayah display from SQLite, then use API for audio/fallback.
         loadAyahFromApi(currentAyah);
 
         btnPlay.setOnClickListener(view -> {
@@ -159,11 +177,7 @@ public class ThirdActivity extends AppCompatActivity {
 
         if (currentRepeatCount <= repeatLimit) {
 
-            tvDisplay.setText(
-                    "﴿ " + currentAyahText + " ﴾"
-                            + "\n\nالآية: " + currentAyah
-                            + "\nالتكرار: " + currentRepeatCount + " / " + repeatLimit
-            );
+            renderAyahDisplay();
 
             playAudio(currentAudioUrl);
 
@@ -190,6 +204,7 @@ public class ThirdActivity extends AppCompatActivity {
 
                     } else {
                         isRunning = false;
+                        saveCurrentProgress();
                         tvDisplay.setText("تم الانتهاء من الحفظ!");
                     }
                 }
@@ -198,14 +213,14 @@ public class ThirdActivity extends AppCompatActivity {
         }
     }
 
-
-
     private void updateUI() {
 
         loadAyahFromApi(currentAyah);
     }
 
     private void loadAyahFromApi(int ayahNumber) {
+
+        boolean displayedFromSqlite = loadAyahFromSqlite(ayahNumber);
 
         String url =
                 "https://api.alquran.cloud/v1/ayah/"
@@ -233,55 +248,55 @@ public class ThirdActivity extends AppCompatActivity {
                                 JSONObject audioObject =
                                         data.getJSONObject(1);
 
-                                currentAyahText =
-                                        textObject.getString("text");
-
                                 currentAudioUrl =
                                         audioObject.getString("audio");
 
-                                // رابط صورة صحيح
-                                String imageUrl =
-                                        "https://cdn.islamic.network/quran/images/"
-                                                + ayahNumber +
-                                                ".png";
+                                if (!displayedFromSqlite) {
 
-                                Glide.with(this)
-                                        .load(imageUrl)
-                                        .into(imgPage);
+                                    currentAyahText =
+                                            textObject.getString("text");
 
-                                tvDisplay.setText(
+                                    JSONObject surahObject =
+                                            textObject.optJSONObject("surah");
 
-                                        "﴿ "
-                                                + currentAyahText
-                                                + " ﴾"
+                                    if (surahObject != null) {
+                                        currentSurahNumber =
+                                                surahObject.optInt("number", currentSurahNumber);
+                                    }
 
-                                                + "\n\n"
+                                    currentAyahInSurah =
+                                            textObject.optInt("numberInSurah", ayahNumber);
 
-                                                + "الآية: "
-                                                + ayahNumber
+                                    currentPageNumber =
+                                            textObject.optInt("page", currentPageNumber);
 
-                                                + "\n"
-
-                                                + "التكرار: "
-                                                + currentRepeatCount
-                                );
+                                    loadMushafPageImage(currentPageNumber);
+                                    saveCurrentProgress();
+                                    renderAyahDisplay();
+                                } else {
+                                    updateLastProgressText();
+                                }
 
                             } catch (Exception e) {
 
-                                tvDisplay.setText(
-                                        "خطأ بالبيانات: "
-                                                + e.getMessage()
-                                );
+                                if (!displayedFromSqlite) {
+                                    tvDisplay.setText(
+                                            "خطأ بالبيانات: "
+                                                    + e.getMessage()
+                                    );
+                                }
                             }
 
                         },
 
                         error -> {
 
-                            tvDisplay.setText(
-                                    "خطأ API: "
-                                            + error.toString()
-                            );
+                            if (!displayedFromSqlite) {
+                                tvDisplay.setText(
+                                        "خطأ API: "
+                                                + error.toString()
+                                );
+                            }
 
                             Toast.makeText(
                                     this,
@@ -293,6 +308,76 @@ public class ThirdActivity extends AppCompatActivity {
                 );
 
         queue.add(request);
+    }
+
+    private boolean loadAyahFromSqlite(int ayahNumber) {
+
+        Verse verse = dbHelper.getVerseByAyahNumber(ayahNumber);
+
+        if (verse == null) {
+            return false;
+        }
+
+        currentSurahNumber = verse.surahNumber;
+        currentAyahInSurah = verse.ayahNumber;
+        currentPageNumber = verse.pageNumber;
+        currentAyahText = verse.textAr;
+
+        loadMushafPageImage(currentPageNumber);
+        saveCurrentProgress();
+        renderAyahDisplay();
+
+        return true;
+    }
+
+    private void renderAyahDisplay() {
+
+        tvDisplay.setText(
+                "﴿ " + currentAyahText + " ﴾"
+                        + "\n\nالسورة: " + currentSurahNumber
+                        + "\nالآية: " + currentAyahInSurah
+                        + "\nالتكرار: " + currentRepeatCount + " / " + repeatLimit
+        );
+
+        tvPageInfo.setText(
+                "صفحة المصحف: " + currentPageNumber
+                        + " | الآية الحالية: " + currentAyahInSurah
+        );
+    }
+
+    private void loadMushafPageImage(int pageNumber) {
+
+        if (pageNumber <= 0) {
+            imgPage.setImageResource(R.drawable.ic_launcher_background);
+            return;
+        }
+
+        String imageUrl = String.format(
+                Locale.US,
+                "https://quran.ksu.edu.sa/png_big/%d.png",
+                pageNumber
+        );
+
+        Glide.with(this)
+                .load(imageUrl)
+                .placeholder(R.drawable.card_background)
+                .error(R.drawable.ic_launcher_background)
+                .into(imgPage);
+    }
+
+    private void saveCurrentProgress() {
+
+        dbHelper.saveProgress(currentSurahNumber, currentAyahInSurah);
+        updateLastProgressText();
+    }
+
+    private void updateLastProgressText() {
+
+        if (tvLastProgress != null && dbHelper != null) {
+            tvLastProgress.setText(
+                    "آخر موضع محفوظ: " + dbHelper.getLastProgress()
+            );
+        }
     }
 
     private void playAudio(String audioUrl) {
