@@ -3,7 +3,6 @@ package com.example.quranmemorizationapp;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -93,46 +92,43 @@ public class ThirdActivity extends AppCompatActivity {
             currentAyah = startAyah;
         }
 
-        btnPlay.setOnClickListener(new View.OnClickListener() {
+        // تحميل أول آية وصورة مباشرة
+        loadAyahFromApi(currentAyah);
 
-            @Override
-            public void onClick(View view) {
+        btnPlay.setOnClickListener(view -> {
 
-                if (!isRunning) {
+            if (!isRunning) {
 
-                    isRunning = true;
+                isRunning = true;
 
-                    runRepetitionLogic();
+                playAudio(currentAudioUrl);
 
-                    Toast.makeText(
-                            ThirdActivity.this,
-                            "بدء الحفظ...",
-                            Toast.LENGTH_SHORT
-                    ).show();
-                }
-            }
-        });
-
-        btnPause.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-
-                isRunning = false;
-
-                handler.removeCallbacksAndMessages(null);
-
-                if (mediaPlayer != null) {
-
-                    mediaPlayer.pause();
-                }
+                runRepetitionLogic();
 
                 Toast.makeText(
                         ThirdActivity.this,
-                        "توقف مؤقت",
+                        "بدء الحفظ...",
                         Toast.LENGTH_SHORT
                 ).show();
             }
+        });
+
+        btnPause.setOnClickListener(view -> {
+
+            isRunning = false;
+
+            handler.removeCallbacksAndMessages(null);
+
+            if (mediaPlayer != null) {
+
+                mediaPlayer.pause();
+            }
+
+            Toast.makeText(
+                    ThirdActivity.this,
+                    "توقف مؤقت",
+                    Toast.LENGTH_SHORT
+            ).show();
         });
 
         btnNext.setOnClickListener(v -> {
@@ -160,7 +156,7 @@ public class ThirdActivity extends AppCompatActivity {
 
         if (!isRunning) return;
 
-        handler.post(new Runnable() {
+        handler.postDelayed(new Runnable() {
 
             @Override
             public void run() {
@@ -170,6 +166,8 @@ public class ThirdActivity extends AppCompatActivity {
                     if (currentAyah <= endAyah) {
 
                         updateUI();
+
+                        playAudio(currentAudioUrl);
 
                         currentAyah++;
 
@@ -191,7 +189,7 @@ public class ThirdActivity extends AppCompatActivity {
                     isRunning = false;
                 }
             }
-        });
+        }, 8000);
     }
 
     private void updateUI() {
@@ -233,8 +231,9 @@ public class ThirdActivity extends AppCompatActivity {
                                 currentAudioUrl =
                                         audioObject.getString("audio");
 
+                                // رابط صورة صحيح
                                 String imageUrl =
-                                        "https://raw.githubusercontent.com/QuranHub/quran-pages-images/main/ayah/warsh/"
+                                        "https://cdn.islamic.network/quran/images/"
                                                 + ayahNumber +
                                                 ".png";
 
@@ -259,8 +258,6 @@ public class ThirdActivity extends AppCompatActivity {
                                                 + currentRepeatCount
                                 );
 
-                                playAudio(currentAudioUrl);
-
                             } catch (Exception e) {
 
                                 tvDisplay.setText(
@@ -271,10 +268,19 @@ public class ThirdActivity extends AppCompatActivity {
 
                         },
 
-                        error -> tvDisplay.setText(
-                                "خطأ API: "
-                                        + error.getMessage()
-                        )
+                        error -> {
+
+                            tvDisplay.setText(
+                                    "خطأ API: "
+                                            + error.toString()
+                            );
+
+                            Toast.makeText(
+                                    this,
+                                    error.toString(),
+                                    Toast.LENGTH_LONG
+                            ).show();
+                        }
 
                 );
 
@@ -287,16 +293,42 @@ public class ThirdActivity extends AppCompatActivity {
 
             if (mediaPlayer != null) {
 
+                mediaPlayer.stop();
+
                 mediaPlayer.release();
             }
 
             mediaPlayer = new MediaPlayer();
 
+            mediaPlayer.setAudioStreamType(
+                    android.media.AudioManager.STREAM_MUSIC
+            );
+
             mediaPlayer.setDataSource(audioUrl);
 
-            mediaPlayer.prepare();
+            mediaPlayer.setOnPreparedListener(mp -> {
 
-            mediaPlayer.start();
+                mp.start();
+
+                Toast.makeText(
+                        this,
+                        "يعمل الصوت الآن",
+                        Toast.LENGTH_SHORT
+                ).show();
+            });
+
+            mediaPlayer.setOnErrorListener((mp, what, extra) -> {
+
+                Toast.makeText(
+                        this,
+                        "فشل تشغيل الصوت",
+                        Toast.LENGTH_LONG
+                ).show();
+
+                return true;
+            });
+
+            mediaPlayer.prepareAsync();
 
         } catch (Exception e) {
 

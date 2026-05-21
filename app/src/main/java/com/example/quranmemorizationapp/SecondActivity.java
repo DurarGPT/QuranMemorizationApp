@@ -128,41 +128,31 @@ public class SecondActivity extends AppCompatActivity {
     }
 
     private void startPlaying() {
+
         if (!readInputs()) return;
 
-        currentAyah = fromAyah;
-        repeatCount = 0;
-        isPlaying = true;
-
-        handler.removeCallbacksAndMessages(null);
-
-        runnable = new Runnable() {
-            @Override
-            public void run() {
-                if (!isPlaying) return;
-
-                tvStatus.setText(
-                        isArabic
-                                ? "الآية " + currentAyah + "  •  التكرار " + (repeatCount + 1) + "/" + maxRepeat
-                                : "Ayah " + currentAyah + "  •  Repeat " + (repeatCount + 1) + "/" + maxRepeat
+        android.content.Intent intent =
+                new android.content.Intent(
+                        SecondActivity.this,
+                        ThirdActivity.class
                 );
 
-                repeatCount++;
+        intent.putExtra(
+                "FROM_AYAH",
+                String.valueOf(fromAyah)
+        );
 
-                if (repeatCount >= maxRepeat) {
-                    repeatCount = 0;
-                    currentAyah++;
+        intent.putExtra(
+                "TO_AYAH",
+                String.valueOf(toAyah)
+        );
 
-                    if (currentAyah > toAyah) {
-                        currentAyah = fromAyah;
-                    }
-                }
+        intent.putExtra(
+                "REPEAT_LIMIT",
+                String.valueOf(npRepeat.getValue())
+        );
 
-                handler.postDelayed(this, 1500);
-            }
-        };
-
-        handler.post(runnable);
+        startActivity(intent);
     }
 
     private void pausePlaying() {
