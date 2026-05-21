@@ -136,16 +136,17 @@ public class ThirdActivity extends AppCompatActivity {
             if (currentAyah < endAyah) {
 
                 currentAyah++;
+                currentRepeatCount = 1;
 
                 updateUI();
             }
         });
-
         btnPrevious.setOnClickListener(v -> {
 
             if (currentAyah > startAyah) {
 
                 currentAyah--;
+                currentRepeatCount = 1;
 
                 updateUI();
             }
@@ -156,41 +157,48 @@ public class ThirdActivity extends AppCompatActivity {
 
         if (!isRunning) return;
 
-        handler.postDelayed(new Runnable() {
+        if (currentRepeatCount <= repeatLimit) {
 
-            @Override
-            public void run() {
+            tvDisplay.setText(
+                    "﴿ " + currentAyahText + " ﴾"
+                            + "\n\nالآية: " + currentAyah
+                            + "\nالتكرار: " + currentRepeatCount + " / " + repeatLimit
+            );
+
+            playAudio(currentAudioUrl);
+
+            handler.postDelayed(() -> {
+
+                if (!isRunning) return;
+
+                currentRepeatCount++;
 
                 if (currentRepeatCount <= repeatLimit) {
+                    runRepetitionLogic();
+                } else {
+                    currentRepeatCount = 1;
 
-                    if (currentAyah <= endAyah) {
-
-                        updateUI();
-
-                        playAudio(currentAudioUrl);
-
+                    if (currentAyah < endAyah) {
                         currentAyah++;
+                        loadAyahFromApi(currentAyah);
 
-                        handler.postDelayed(this, 8000);
+                        handler.postDelayed(() -> {
+                            if (isRunning) {
+                                runRepetitionLogic();
+                            }
+                        }, 1500);
 
                     } else {
-
-                        currentRepeatCount++;
-
-                        currentAyah = startAyah;
-
-                        handler.post(this);
+                        isRunning = false;
+                        tvDisplay.setText("تم الانتهاء من الحفظ!");
                     }
-
-                } else {
-
-                    tvDisplay.setText("تم الانتهاء من الحفظ!");
-
-                    isRunning = false;
                 }
-            }
-        }, 8000);
+
+            }, 8000);
+        }
     }
+
+
 
     private void updateUI() {
 
