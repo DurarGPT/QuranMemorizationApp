@@ -32,11 +32,15 @@ public class MainActivity extends AppCompatActivity {
         tvSubtitle = findViewById(R.id.tvSubtitle);
         tvBottomText = findViewById(R.id.tvBottomText);
 
-        sharedPreferences = getSharedPreferences("QiraatiSettings", MODE_PRIVATE);
+        sharedPreferences =
+                getSharedPreferences(
+                        "QiraatiSettings",
+                        MODE_PRIVATE
+                );
 
         dbHelper = new DBHelper(this);
 
-        // INSERT SAMPLE DATA ONLY ONCE
+        // INSERT SAMPLE DATA
         seedDatabase();
 
         // LOAD ALL VERSES
@@ -47,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
                 dbHelper.getVersesInRange(1, 2);
 
         for (Verse v : rangeVerses) {
+
             Log.d("RANGE_VERSE", v.textAr);
         }
 
@@ -54,33 +59,57 @@ public class MainActivity extends AppCompatActivity {
         dbHelper.saveProgress(1, 2);
 
         // GET USER PROGRESS
-        String progress = dbHelper.getLastProgress();
+        String progress =
+                dbHelper.getLastProgress();
 
         Log.d("PROGRESS", progress);
 
         btnStart.setOnClickListener(view ->
-                startActivity(new Intent(MainActivity.this, SecondActivity.class))
+
+                startActivity(
+                        new Intent(
+                                MainActivity.this,
+                                SecondActivity.class
+                        )
+                )
         );
 
         btnAbout.setOnClickListener(view ->
-                startActivity(new Intent(MainActivity.this, AboutActivity.class))
+
+                startActivity(
+                        new Intent(
+                                MainActivity.this,
+                                AboutActivity.class
+                        )
+                )
         );
 
         btnSettings.setOnClickListener(view ->
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class))
+
+                startActivity(
+                        new Intent(
+                                MainActivity.this,
+                                SettingsActivity.class
+                        )
+                )
         );
     }
 
     @Override
     protected void onResume() {
+
         super.onResume();
+
         updateLanguage();
     }
 
     private void updateLanguage() {
 
         boolean isArabic =
-                sharedPreferences.getBoolean("arabicLanguage", false);
+                sharedPreferences.getBoolean(
+                        "arabicLanguage",
+                        false
+                );
 
         if (isArabic) {
 
@@ -130,9 +159,7 @@ public class MainActivity extends AppCompatActivity {
                             1,
                             1,
                             1,
-                            "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
-                            "https://example.com/audio1.mp3",
-                            "https://example.com/page1.jpg"
+                            "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"
                     )
             );
 
@@ -141,9 +168,7 @@ public class MainActivity extends AppCompatActivity {
                             1,
                             2,
                             1,
-                            "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",
-                            "https://example.com/audio2.mp3",
-                            "https://example.com/page1.jpg"
+                            "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ"
                     )
             );
 
@@ -152,9 +177,7 @@ public class MainActivity extends AppCompatActivity {
                             1,
                             3,
                             1,
-                            "الرَّحْمَٰنِ الرَّحِيمِ",
-                            "https://example.com/audio3.mp3",
-                            "https://example.com/page1.jpg"
+                            "الرَّحْمَٰنِ الرَّحِيمِ"
                     )
             );
 
@@ -163,9 +186,7 @@ public class MainActivity extends AppCompatActivity {
                             1,
                             4,
                             1,
-                            "مَالِكِ يَوْمِ الدِّينِ",
-                            "https://example.com/audio4.mp3",
-                            "https://example.com/page1.jpg"
+                            "مَالِكِ يَوْمِ الدِّينِ"
                     )
             );
 
@@ -174,9 +195,7 @@ public class MainActivity extends AppCompatActivity {
                             1,
                             5,
                             1,
-                            "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ",
-                            "https://example.com/audio5.mp3",
-                            "https://example.com/page1.jpg"
+                            "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ"
                     )
             );
         }

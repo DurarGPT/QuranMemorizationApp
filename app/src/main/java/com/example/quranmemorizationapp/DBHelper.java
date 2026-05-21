@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class DBHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "quran.db";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
 
     public DBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -19,16 +19,14 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        // VERSES TABLE (comments is for the group so i can show them what i do for my part)
+        // VERSES TABLE
         db.execSQL(
                 "CREATE TABLE verses (" +
                         "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "surah_number INTEGER," +
                         "ayah_number INTEGER," +
                         "page_number INTEGER," +
-                        "text_ar TEXT," +
-                        "audio_url TEXT," +
-                        "image_url TEXT)"
+                        "text_ar TEXT)"
         );
 
         // USER PROGRESS TABLE
@@ -41,9 +39,12 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase db,
+                          int oldVersion,
+                          int newVersion) {
 
         db.execSQL("DROP TABLE IF EXISTS verses");
+
         db.execSQL("DROP TABLE IF EXISTS user_progress");
 
         onCreate(db);
@@ -57,12 +58,12 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
 
         values.put("surah_number", verse.surahNumber);
+
         values.put("ayah_number", verse.ayahNumber);
+
         values.put("page_number", verse.pageNumber);
 
         values.put("text_ar", verse.textAr);
-        values.put("audio_url", verse.audioUrl);
-        values.put("image_url", verse.imageUrl);
 
         db.insert("verses", null, values);
 
@@ -91,9 +92,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         c.getInt(2),
                         c.getInt(3),
 
-                        c.getString(4),
-                        c.getString(5),
-                        c.getString(6)
+                        c.getString(4)
 
                 );
 
@@ -109,7 +108,8 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // GET VERSES IN RANGE
-    public ArrayList<Verse> getVersesInRange(int startAyah, int endAyah) {
+    public ArrayList<Verse> getVersesInRange(int startAyah,
+                                             int endAyah) {
 
         ArrayList<Verse> list = new ArrayList<>();
 
@@ -133,10 +133,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         c.getInt(2),
                         c.getInt(3),
 
-                        c.getString(4),
-                        c.getString(5),
-                        c.getString(6)
-
+                        c.getString(4)
                 );
 
                 list.add(verse);
@@ -151,18 +148,24 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // SAVE USER PROGRESS
-    public void saveProgress(int surah, int ayah) {
+    public void saveProgress(int surah,
+                             int ayah) {
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db =
+                this.getWritableDatabase();
 
         db.execSQL("DELETE FROM user_progress");
 
-        ContentValues values = new ContentValues();
+        ContentValues values =
+                new ContentValues();
 
         values.put("last_surah", surah);
+
         values.put("last_ayah", ayah);
 
-        db.insert("user_progress", null, values);
+        db.insert("user_progress",
+                null,
+                values);
 
         db.close();
     }
@@ -170,7 +173,8 @@ public class DBHelper extends SQLiteOpenHelper {
     // GET LAST PROGRESS
     public String getLastProgress() {
 
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db =
+                this.getReadableDatabase();
 
         Cursor c = db.rawQuery(
                 "SELECT * FROM user_progress LIMIT 1",
@@ -182,13 +186,17 @@ public class DBHelper extends SQLiteOpenHelper {
         if (c.moveToFirst()) {
 
             int surah = c.getInt(1);
+
             int ayah = c.getInt(2);
 
-            result = "Last Read: Surah " + surah +
-                    " Ayah " + ayah;
+            result = "Last Read: Surah " +
+                    surah +
+                    " Ayah " +
+                    ayah;
         }
 
         c.close();
+
         db.close();
 
         return result;
