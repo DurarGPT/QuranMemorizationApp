@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8F7F2"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="مكتبة الفيديوهات"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="#1F3D2B"
+            android:gravity="center"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="فيديوهات تعليمية قصيرة تساعد الطفل على الحفظ بطريقة ممتعة"
+            android:textSize="16sp"
+            android:textColor="#5F6F65"
+            android:gravity="center"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Video Card 1 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_background"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="تعلم سورة الفاتحة"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#1F3D2B" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="شرح قصير ومبسط للأطفال"
+                android:textSize="14sp"
+                android:textColor="#6B7280"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="12dp" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="تشغيل الفيديو" />
+        </LinearLayout>
+
+        <!-- Video Card 2 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_background"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="طريقة تكرار الآيات"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#1F3D2B" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="فيديو يساعد الطفل على فهم طريقة الحفظ بالتكرار"
+                android:textSize="14sp"
+                android:textColor="#6B7280"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="12dp" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="تشغيل الفيديو" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
