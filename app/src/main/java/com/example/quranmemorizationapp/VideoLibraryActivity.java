@@ -1,5 +1,6 @@
 package com.example.quranmemorizationapp;
 
+
 // Imports needed for the activity and Toast message
 import android.os.Bundle;
 import android.widget.Toast;
@@ -10,8 +11,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.ArrayList;
+
 // This class controls the Video Library screen
 public class VideoLibraryActivity extends AppCompatActivity {
+
+    // ArrayList to store videos
+    ArrayList<VideoModel> videoList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +30,12 @@ public class VideoLibraryActivity extends AppCompatActivity {
 
         // Connects this Java class to the XML design file
         setContentView(R.layout.activity_video_library);
+
+        // CREATE VIDEO LIST
+        videoList = new ArrayList<>();
+
+        // ADD VIDEOS TO THE LIST
+        addVideos();
 
         // Shows a small welcome message when the screen opens
         Toast.makeText(this,
@@ -47,5 +59,45 @@ public class VideoLibraryActivity extends AppCompatActivity {
 
             return insets;
         });
+    }
+
+    // METHOD TO ADD VIDEO DATA
+    private void addVideos() {
+
+        videoList.add(
+                new VideoModel(
+                        "تعلم سورة الفاتحة",
+                        "شرح مبسط للأطفال",
+                        "https://youtu.be/rJIsyMuk5rU?si=CYw2r4PMZ8cYo7n6",
+                        R.drawable.fatiha_thumb
+                )
+        );
+
+        videoList.add(
+                new VideoModel(
+                        "تعلم سورة الإخلاص",
+                        "تحفيظ سهل للأطفال",
+                        "https://youtu.be/HiqQ5c-haUw?si=FFyhMUXQgUHBcFmj",
+                        R.drawable.ikhlas_thumb
+                )
+        );
+
+        videoList.add(
+                new VideoModel(
+                        "تعلم سورة الفلق",
+                        "تكرار ممتع للأطفال",
+                        "https://youtu.be/k2Qg4Yd7kw0?si=VacWyP6EvtC7nMQJ",
+                        R.drawable.falaq_thumb
+                )
+        );
+
+        videoList.add(
+                new VideoModel(
+                        "تعلم سورة الناس",
+                        "تعليم وتحفيظ للأطفال",
+                        "https://youtu.be/TyKwwVemYhw?si=Hdbmf0kguVNjwgp3",
+                        R.drawable.annas_thumb
+                )
+        );
     }
 }
