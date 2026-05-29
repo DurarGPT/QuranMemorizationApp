@@ -12,7 +12,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
-
+import android.content.Intent;
+import android.widget.Button;
 // This class controls the Video Library screen
 public class VideoLibraryActivity extends AppCompatActivity {
 
@@ -36,6 +37,20 @@ public class VideoLibraryActivity extends AppCompatActivity {
 
         // ADD VIDEOS TO THE LIST
         addVideos();
+        Button btnVideo1 = findViewById(R.id.btnVideo1);
+        Button btnVideo2 = findViewById(R.id.btnVideo2);
+
+        btnVideo1.setOnClickListener(v -> {
+            Intent intent = new Intent(VideoLibraryActivity.this, VideoPlayerActivity.class);
+            intent.putExtra("videoUrl", videoList.get(0).getVideoUrl());
+            startActivity(intent);
+        });
+
+        btnVideo2.setOnClickListener(v -> {
+            Intent intent = new Intent(VideoLibraryActivity.this, VideoPlayerActivity.class);
+            intent.putExtra("videoUrl", videoList.get(1).getVideoUrl());
+            startActivity(intent);
+        });
 
         // Shows a small welcome message when the screen opens
         Toast.makeText(this,

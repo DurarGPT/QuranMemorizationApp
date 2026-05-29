@@ -57,6 +57,7 @@
                 android:layout_marginBottom="12dp" />
 
             <Button
+                android:id="@+id/btnVideo1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="تشغيل الفيديو" />
@@ -89,6 +90,7 @@
                 android:layout_marginBottom="12dp" />
 
             <Button
+                android:id="@+id/btnVideo2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="تشغيل الفيديو" />
