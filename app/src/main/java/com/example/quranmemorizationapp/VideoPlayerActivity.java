@@ -1,38 +1,43 @@
 package com.example.quranmemorizationapp;
 
-
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.MediaController;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class VideoPlayerActivity extends AppCompatActivity {
 
-    VideoView videoView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_video_player);
 
-        videoView = findViewById(R.id.videoView);
+        String videoUrl =
+                getIntent().getStringExtra("videoUrl");
 
-        String videoUrl = getIntent().getStringExtra("videoUrl");
+        if (videoUrl != null && !videoUrl.isEmpty()) {
 
-        if (videoUrl != null) {
-            Uri uri = Uri.parse(videoUrl);
-            videoView.setVideoURI(uri);
+            Intent intent =
+                    new Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(videoUrl)
+                    );
 
-            MediaController mediaController = new MediaController(this);
-            mediaController.setAnchorView(videoView);
-            videoView.setMediaController(mediaController);
+            startActivity(intent);
 
-            videoView.start();
+            finish();
+
         } else {
-            Toast.makeText(this, "No video found", Toast.LENGTH_SHORT).show();
+
+            Toast.makeText(
+                    this,
+                    "No video found",
+                    Toast.LENGTH_SHORT
+            ).show();
+
+            finish();
         }
     }
 }

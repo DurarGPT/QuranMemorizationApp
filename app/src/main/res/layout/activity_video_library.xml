@@ -30,7 +30,7 @@
             android:gravity="center"
             android:layout_marginBottom="24dp" />
 
-        <!-- Video Card 1 -->
+        <!-- Video 1 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
                 android:text="تشغيل الفيديو" />
         </LinearLayout>
 
-        <!-- Video Card 2 -->
+        <!-- Video 2 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="طريقة تكرار الآيات"
+                android:text="تعلم سورة الإخلاص"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#1F3D2B" />
@@ -83,7 +83,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="فيديو يساعد الطفل على فهم طريقة الحفظ بالتكرار"
+                android:text="تحفيظ سهل للأطفال"
                 android:textSize="14sp"
                 android:textColor="#6B7280"
                 android:layout_marginTop="6dp"
@@ -96,5 +96,71 @@
                 android:text="تشغيل الفيديو" />
         </LinearLayout>
 
+        <!-- Video 3 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_background"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="تعلم سورة الفلق"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#1F3D2B" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="تكرار ممتع للأطفال"
+                android:textSize="14sp"
+                android:textColor="#6B7280"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="12dp" />
+
+            <Button
+                android:id="@+id/btnVideo3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="تشغيل الفيديو" />
+        </LinearLayout>
+
+        <!-- Video 4 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_background"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="تعلم سورة الناس"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#1F3D2B" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="تعليم وتحفيظ للأطفال"
+                android:textSize="14sp"
+                android:textColor="#6B7280"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="12dp" />
+
+            <Button
+                android:id="@+id/btnVideo4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="تشغيل الفيديو" />
+        </LinearLayout>
+
     </LinearLayout>
+
 </ScrollView>

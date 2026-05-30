@@ -1,4 +1,5 @@
 package com.example.quranmemorizationapp;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,7 +13,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button btnStart, btnAbout, btnSettings;
+    Button btnStart, btnAbout, btnSettings, btnVideoLibrary;
+
     TextView tvTitle, tvSubtitle, tvBottomText;
 
     SharedPreferences sharedPreferences;
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         btnStart = findViewById(R.id.btnStart);
         btnAbout = findViewById(R.id.btnAbout);
         btnSettings = findViewById(R.id.btnSettings);
+        btnVideoLibrary = findViewById(R.id.btnVideoLibrary);
 
         tvTitle = findViewById(R.id.tvTitle);
         tvSubtitle = findViewById(R.id.tvSubtitle);
@@ -93,6 +96,16 @@ public class MainActivity extends AppCompatActivity {
                         )
                 )
         );
+
+        btnVideoLibrary.setOnClickListener(view ->
+
+                startActivity(
+                        new Intent(
+                                MainActivity.this,
+                                VideoLibraryActivity.class
+                        )
+                )
+        );
     }
 
     @Override
@@ -125,6 +138,8 @@ public class MainActivity extends AppCompatActivity {
 
             btnSettings.setText("الإعدادات");
 
+            btnVideoLibrary.setText("مكتبة الفيديوهات");
+
             tvBottomText.setText(
                     "تعلّم • كرّر • احفظ"
             );
@@ -142,6 +157,8 @@ public class MainActivity extends AppCompatActivity {
             btnAbout.setText("About App");
 
             btnSettings.setText("Settings");
+
+            btnVideoLibrary.setText("Video Library");
 
             tvBottomText.setText(
                     "Learn • Repeat • Memorize"
