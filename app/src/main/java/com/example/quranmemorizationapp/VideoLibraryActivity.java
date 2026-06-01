@@ -15,7 +15,11 @@ import java.util.ArrayList;
 
 public class VideoLibraryActivity extends AppCompatActivity {
 
+    // Store all videos
     ArrayList<VideoModel> videoList;
+
+    // Back button
+    Button btnBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,18 +28,30 @@ public class VideoLibraryActivity extends AppCompatActivity {
 
         EdgeToEdge.enable(this);
 
+        // Connect activity to XML layout
         setContentView(R.layout.activity_video_library);
 
+        // Connect back button
+        btnBack = findViewById(R.id.btnBack);
+
+        // Back button closes current page
+        btnBack.setOnClickListener(v -> finish());
+
+        // Create video list
         videoList = new ArrayList<>();
 
+        // Add videos into array
         addVideos();
 
+        // Connect buttons from XML
         Button btnVideo1 = findViewById(R.id.btnVideo1);
         Button btnVideo2 = findViewById(R.id.btnVideo2);
         Button btnVideo3 = findViewById(R.id.btnVideo3);
         Button btnVideo4 = findViewById(R.id.btnVideo4);
 
+        // Open first video
         btnVideo1.setOnClickListener(v -> {
+
             Intent intent = new Intent(
                     VideoLibraryActivity.this,
                     VideoPlayerActivity.class
@@ -49,7 +65,9 @@ public class VideoLibraryActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        // Open second video
         btnVideo2.setOnClickListener(v -> {
+
             Intent intent = new Intent(
                     VideoLibraryActivity.this,
                     VideoPlayerActivity.class
@@ -63,7 +81,9 @@ public class VideoLibraryActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        // Open third video
         btnVideo3.setOnClickListener(v -> {
+
             Intent intent = new Intent(
                     VideoLibraryActivity.this,
                     VideoPlayerActivity.class
@@ -77,7 +97,9 @@ public class VideoLibraryActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        // Open fourth video
         btnVideo4.setOnClickListener(v -> {
+
             Intent intent = new Intent(
                     VideoLibraryActivity.this,
                     VideoPlayerActivity.class
@@ -91,12 +113,14 @@ public class VideoLibraryActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        // Welcome message
         Toast.makeText(
                 this,
                 "مرحباً بك في مكتبة الفيديوهات",
                 Toast.LENGTH_SHORT
         ).show();
 
+        // Handle phone screen padding
         ViewCompat.setOnApplyWindowInsetsListener(
                 findViewById(R.id.main),
                 (v, insets) -> {
@@ -118,6 +142,7 @@ public class VideoLibraryActivity extends AppCompatActivity {
         );
     }
 
+    // Add videos into list
     private void addVideos() {
 
         videoList.add(

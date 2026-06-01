@@ -11,6 +11,19 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- Back button -->
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="← رجوع"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:textColor="@color/text_light"
+            android:background="@drawable/rounded_button"
+            android:layout_gravity="start"
+            android:layout_marginBottom="16dp"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

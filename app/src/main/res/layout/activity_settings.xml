@@ -92,36 +92,7 @@
             android:background="@drawable/spinner_background"
             android:padding="12dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:background="@drawable/card_background"
-            android:elevation="4dp"
-            android:padding="22dp"
-            android:layout_marginTop="30dp">
 
-            <TextView
-                android:id="@+id/tvPreviewTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Preview"
-                android:textColor="@color/teal_dark"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="10dp" />
-
-            <TextView
-                android:id="@+id/tvPreview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="This is how the app will look based on your settings."
-                android:textColor="@color/text_dark"
-                android:textSize="15sp"
-                android:gravity="center" />
-
-        </LinearLayout>
 
     </LinearLayout>
 

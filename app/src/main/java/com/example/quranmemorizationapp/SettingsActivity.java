@@ -18,7 +18,7 @@ public class SettingsActivity extends AppCompatActivity {
     Spinner spLanguage, spTheme;
 
     TextView tvSettingsTitle, tvLanguageLabel, tvLanguageDesc;
-    TextView tvThemeLabel, tvThemeDesc, tvPreviewTitle, tvPreview;
+    TextView tvThemeLabel, tvThemeDesc;
 
     SharedPreferences sharedPreferences;
 
@@ -46,8 +46,6 @@ public class SettingsActivity extends AppCompatActivity {
         tvLanguageDesc = findViewById(R.id.tvLanguageDesc);
         tvThemeLabel = findViewById(R.id.tvThemeLabel);
         tvThemeDesc = findViewById(R.id.tvThemeDesc);
-        tvPreviewTitle = findViewById(R.id.tvPreviewTitle);
-        tvPreview = findViewById(R.id.tvPreview);
 
         sharedPreferences = getSharedPreferences("QiraatiSettings", MODE_PRIVATE);
 
@@ -137,9 +135,6 @@ public class SettingsActivity extends AppCompatActivity {
 
             tvThemeLabel.setText("المظهر");
             tvThemeDesc.setText("اختاري المظهر المفضل");
-
-            tvPreviewTitle.setText("معاينة");
-            tvPreview.setText("هكذا سيظهر التطبيق بناءً على الإعدادات.");
         } else {
             btnBack.setText("Back");
             tvSettingsTitle.setText("Settings");
@@ -149,9 +144,6 @@ public class SettingsActivity extends AppCompatActivity {
 
             tvThemeLabel.setText("Theme");
             tvThemeDesc.setText("Choose your preferred theme");
-
-            tvPreviewTitle.setText("Preview");
-            tvPreview.setText("This is how the app will look based on your settings.");
         }
     }
 }
