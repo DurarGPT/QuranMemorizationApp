@@ -1,5 +1,7 @@
 package com.example.quranmemorizationapp;
 
+import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,48 +28,41 @@ public class ThirdActivity extends AppCompatActivity {
     // Buttons
     Button btnBack, btnPlay, btnPause, btnReplay, btnPrevious;
 
-    // Text display views
-    TextView tvDisplay, tvPageInfo, tvLastProgress;
+    // TextViews
+    TextView tvTitle, tvDisplay, tvPageInfo, tvLastProgress;
 
     // Mushaf page image
     ImageView imgPage;
 
-    // Ayah range received from SecondActivity
+    // Database helper
+    DBHelper dbHelper;
+
+    // Language settings
+    SharedPreferences sharedPreferences;
+    boolean isArabic;
+
+    // Ayah range from SecondActivity
     int startAyah, endAyah, repeatLimit;
 
-    // Current ayah being displayed
+    // Current ayah information
     int currentAyah;
-
-    // Repeat counter
     int currentRepeatCount = 1;
-
-    // Current Quran information
     int currentSurahNumber = 1;
     int currentAyahInSurah = 1;
     int currentPageNumber = 1;
 
-    // Handler controls repetition timing
+    // Audio and repetition control
     Handler handler = new Handler();
-
-    // Checks if repetition is currently running
     boolean isRunning = false;
-
-    // Plays ayah audio
     MediaPlayer mediaPlayer;
 
-    // Stores current audio URL and ayah text
+    // Current ayah content
     String currentAudioUrl = "";
     String currentAyahText = "";
 
-    // SQLite helper
-    DBHelper dbHelper;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-
-        // Connect Java activity to XML layout
         setContentView(R.layout.activity_third);
 
         // Connect buttons
@@ -77,76 +72,66 @@ public class ThirdActivity extends AppCompatActivity {
         btnReplay = findViewById(R.id.btnReplay);
         btnPrevious = findViewById(R.id.btnPrevious);
 
-        // Connect text views
+        // Connect TextViews
+        tvTitle = findViewById(R.id.tvTitle);
         tvDisplay = findViewById(R.id.tvDisplay);
         tvPageInfo = findViewById(R.id.tvPageInfo);
         tvLastProgress = findViewById(R.id.tvLastProgress);
 
-        // Connect image view
+        // Connect image
         imgPage = findViewById(R.id.imgPage);
 
-        // Initialize database helper
+        // Initialize database
         dbHelper = new DBHelper(this);
+
+        // Read saved language from SettingsActivity
+        sharedPreferences = getSharedPreferences("QiraatiSettings", MODE_PRIVATE);
+        isArabic = sharedPreferences.getBoolean("arabicLanguage", false);
+
+        // Apply correct language and font
+        updateLanguage();
 
         // Show saved progress
         updateLastProgressText();
 
-        // Receive ayah range and repeat count from SecondActivity
+        // Receive selected ayah range and repeat count
         try {
-
-            startAyah = Integer.parseInt(
-                    getIntent().getStringExtra("FROM_AYAH")
-            );
-
-            endAyah = Integer.parseInt(
-                    getIntent().getStringExtra("TO_AYAH")
-            );
-
-            repeatLimit = Integer.parseInt(
-                    getIntent().getStringExtra("REPEAT_LIMIT")
-            );
-
+            startAyah = Integer.parseInt(getIntent().getStringExtra("FROM_AYAH"));
+            endAyah = Integer.parseInt(getIntent().getStringExtra("TO_AYAH"));
+            repeatLimit = Integer.parseInt(getIntent().getStringExtra("REPEAT_LIMIT"));
             currentAyah = startAyah;
-
         } catch (Exception e) {
-
-            // Default values if intent data is missing
             startAyah = 1;
             endAyah = 5;
             repeatLimit = 1;
             currentAyah = startAyah;
         }
 
-        // Load first ayah display
+        // Load first ayah
         loadAyahFromApi(currentAyah);
 
-        // Back button closes this page
+        // Back button closes this screen
         btnBack.setOnClickListener(view -> finish());
 
-        // Play button starts memorization repetition
+        // Play button starts repetition
         btnPlay.setOnClickListener(view -> {
-
             if (!isRunning) {
-
                 isRunning = true;
 
                 playAudio(currentAudioUrl);
-
                 runRepetitionLogic();
 
                 Toast.makeText(
                         ThirdActivity.this,
-                        "بدء الحفظ...",
+                        isArabic ? "بدء الحفظ..." : "Memorization started...",
                         Toast.LENGTH_SHORT
                 ).show();
             }
         });
 
-        // Pause button stops repetition and pauses audio
+        // Pause button stops repetition
         btnPause.setOnClickListener(view -> {
-
             isRunning = false;
-
             handler.removeCallbacksAndMessages(null);
 
             if (mediaPlayer != null) {
@@ -155,108 +140,127 @@ public class ThirdActivity extends AppCompatActivity {
 
             Toast.makeText(
                     ThirdActivity.this,
-                    "توقف مؤقت",
+                    isArabic ? "توقف مؤقت" : "Paused",
                     Toast.LENGTH_SHORT
             ).show();
         });
 
-        // Replay button repeats the same current ayah
+        // Replay button replays the current ayah
         btnReplay.setOnClickListener(v -> {
-
             currentRepeatCount = 1;
-
             renderAyahDisplay();
-
             playAudio(currentAudioUrl);
 
             Toast.makeText(
                     ThirdActivity.this,
-                    "تمت إعادة تشغيل الآية",
+                    isArabic ? "تمت إعادة تشغيل الآية" : "Ayah replayed",
                     Toast.LENGTH_SHORT
             ).show();
         });
 
-        // Previous button moves to the previous ayah
+        // Previous button moves to previous ayah
         btnPrevious.setOnClickListener(v -> {
-
             if (currentAyah > startAyah) {
-
                 currentAyah--;
                 currentRepeatCount = 1;
-
                 updateUI();
-
             } else {
-
                 Toast.makeText(
                         ThirdActivity.this,
-                        "هذه أول آية في النطاق",
+                        isArabic ? "هذه أول آية في النطاق" : "This is the first ayah in the range",
                         Toast.LENGTH_SHORT
                 ).show();
             }
         });
     }
 
-    // Controls automatic ayah repetition
-    private void runRepetitionLogic() {
+    // Apply selected language + selected font
+    private void updateLanguage() {
 
+        Typeface arabicFont = getResources().getFont(R.font.estedad_regular);
+        Typeface englishFont = getResources().getFont(R.font.dynapuff_regular);
+        Typeface selectedFont = isArabic ? arabicFont : englishFont;
+
+        tvTitle.setTypeface(selectedFont);
+        tvDisplay.setTypeface(selectedFont);
+        tvPageInfo.setTypeface(selectedFont);
+        tvLastProgress.setTypeface(selectedFont);
+
+        btnBack.setTypeface(selectedFont);
+        btnPlay.setTypeface(selectedFont);
+        btnPause.setTypeface(selectedFont);
+        btnReplay.setTypeface(selectedFont);
+        btnPrevious.setTypeface(selectedFont);
+
+        if (isArabic) {
+            tvTitle.setText("التحكم بالحفظ");
+
+            btnBack.setText("← رجوع");
+            btnPlay.setText("تشغيل");
+            btnPause.setText("إيقاف مؤقت");
+            btnReplay.setText("إعادة تشغيل الآية");
+            btnPrevious.setText("الآية السابقة");
+        } else {
+            tvTitle.setText("Memorization Control");
+
+            btnBack.setText("← Back");
+            btnPlay.setText("Play");
+            btnPause.setText("Pause");
+            btnReplay.setText("Replay Ayah");
+            btnPrevious.setText("Previous Ayah");
+        }
+    }
+
+    // Automatic repetition logic
+    private void runRepetitionLogic() {
         if (!isRunning) return;
 
         if (currentRepeatCount <= repeatLimit) {
-
             renderAyahDisplay();
-
             playAudio(currentAudioUrl);
 
             handler.postDelayed(() -> {
-
                 if (!isRunning) return;
 
                 currentRepeatCount++;
 
                 if (currentRepeatCount <= repeatLimit) {
-
                     runRepetitionLogic();
-
                 } else {
-
                     currentRepeatCount = 1;
 
                     if (currentAyah < endAyah) {
-
                         currentAyah++;
                         loadAyahFromApi(currentAyah);
 
                         handler.postDelayed(() -> {
-
                             if (isRunning) {
                                 runRepetitionLogic();
                             }
-
                         }, 1500);
 
                     } else {
-
                         isRunning = false;
-
                         saveCurrentProgress();
 
-                        tvDisplay.setText("تم الانتهاء من الحفظ!");
+                        tvDisplay.setText(
+                                isArabic
+                                        ? "تم الانتهاء من الحفظ!"
+                                        : "Memorization completed!"
+                        );
                     }
                 }
-
             }, 8000);
         }
     }
 
-    // Refreshes the current ayah display
+    // Reload current ayah
     private void updateUI() {
         loadAyahFromApi(currentAyah);
     }
 
-    // Loads ayah data from SQLite first, then API for audio/fallback
+    // Load ayah data from SQLite first, then API for audio and fallback
     private void loadAyahFromApi(int ayahNumber) {
-
         boolean displayedFromSqlite = loadAyahFromSqlite(ayahNumber);
 
         String url =
@@ -271,93 +275,66 @@ public class ThirdActivity extends AppCompatActivity {
                         Request.Method.GET,
                         url,
                         null,
-
                         response -> {
-
                             try {
-
                                 JSONArray data = response.getJSONArray("data");
 
                                 JSONObject textObject = data.getJSONObject(0);
-
                                 JSONObject audioObject = data.getJSONObject(1);
 
                                 currentAudioUrl = audioObject.getString("audio");
 
-                                // Only update text/page from API if SQLite did not have it
                                 if (!displayedFromSqlite) {
-
                                     currentAyahText = textObject.getString("text");
 
-                                    JSONObject surahObject =
-                                            textObject.optJSONObject("surah");
+                                    JSONObject surahObject = textObject.optJSONObject("surah");
 
                                     if (surahObject != null) {
-
                                         currentSurahNumber =
-                                                surahObject.optInt(
-                                                        "number",
-                                                        currentSurahNumber
-                                                );
+                                                surahObject.optInt("number", currentSurahNumber);
                                     }
 
                                     currentAyahInSurah =
-                                            textObject.optInt(
-                                                    "numberInSurah",
-                                                    ayahNumber
-                                            );
+                                            textObject.optInt("numberInSurah", ayahNumber);
 
                                     currentPageNumber =
-                                            textObject.optInt(
-                                                    "page",
-                                                    currentPageNumber
-                                            );
+                                            textObject.optInt("page", currentPageNumber);
 
                                     loadMushafPageImage(currentPageNumber);
-
                                     saveCurrentProgress();
-
                                     renderAyahDisplay();
-
                                 } else {
-
                                     updateLastProgressText();
                                 }
 
                             } catch (Exception e) {
-
                                 if (!displayedFromSqlite) {
-
                                     tvDisplay.setText(
-                                            "خطأ بالبيانات: " + e.getMessage()
+                                            isArabic
+                                                    ? "خطأ بالبيانات: " + e.getMessage()
+                                                    : "Data error: " + e.getMessage()
                                     );
                                 }
                             }
                         },
-
                         error -> {
-
                             if (!displayedFromSqlite) {
-
                                 tvDisplay.setText(
-                                        "خطأ API: " + error.toString()
+                                        isArabic
+                                                ? "خطأ API: " + error.toString()
+                                                : "API error: " + error.toString()
                                 );
                             }
 
-                            Toast.makeText(
-                                    this,
-                                    error.toString(),
-                                    Toast.LENGTH_LONG
-                            ).show();
+                            Toast.makeText(this, error.toString(), Toast.LENGTH_LONG).show();
                         }
                 );
 
         queue.add(request);
     }
 
-    // Loads ayah from local SQLite database
+    // Load ayah from local SQLite database
     private boolean loadAyahFromSqlite(int ayahNumber) {
-
         Verse verse = dbHelper.getVerseByAyahNumber(ayahNumber);
 
         if (verse == null) {
@@ -370,48 +347,47 @@ public class ThirdActivity extends AppCompatActivity {
         currentAyahText = verse.textAr;
 
         loadMushafPageImage(currentPageNumber);
-
         saveCurrentProgress();
-
         renderAyahDisplay();
 
         return true;
     }
 
-    // Updates Arabic text shown on screen
+    // Display ayah information based on selected language
     private void renderAyahDisplay() {
+        if (isArabic) {
+            tvDisplay.setText(
+                    "﴿ " + currentAyahText + " ﴾"
+                            + "\n\nالسورة: " + toArabicNumbers(currentSurahNumber)
+                            + "\nالآية: " + toArabicNumbers(currentAyahInSurah)
+                            + "\nالتكرار: " + toArabicNumbers(currentRepeatCount)
+                            + " / " + toArabicNumbers(repeatLimit)
+            );
 
-        tvDisplay.setText(
-                "﴿ " + currentAyahText + " ﴾"
-                        + "\n\nالسورة: "
-                        + toArabicNumbers(currentSurahNumber)
+            tvPageInfo.setText(
+                    "صفحة المصحف: " + toArabicNumbers(currentPageNumber)
+                            + " | الآية الحالية: " + toArabicNumbers(currentAyahInSurah)
+            );
+        } else {
+            tvDisplay.setText(
+                    "﴿ " + currentAyahText + " ﴾"
+                            + "\n\nSurah: " + currentSurahNumber
+                            + "\nAyah: " + currentAyahInSurah
+                            + "\nRepeat: " + currentRepeatCount
+                            + " / " + repeatLimit
+            );
 
-                        + "\nالآية: "
-                        + toArabicNumbers(currentAyahInSurah)
-
-                        + "\nالتكرار: "
-                        + toArabicNumbers(currentRepeatCount)
-
-                        + " / "
-                        + toArabicNumbers(repeatLimit)
-        );
-
-        tvPageInfo.setText(
-                "صفحة المصحف: "
-                        + toArabicNumbers(currentPageNumber)
-
-                        + " | الآية الحالية: "
-                        + toArabicNumbers(currentAyahInSurah)
-        );
+            tvPageInfo.setText(
+                    "Mushaf Page: " + currentPageNumber
+                            + " | Current Ayah: " + currentAyahInSurah
+            );
+        }
     }
 
-    // Loads Mushaf page image dynamically using page number
+    // Load Mushaf page image from page number
     private void loadMushafPageImage(int pageNumber) {
-
         if (pageNumber <= 0) {
-
             imgPage.setImageResource(R.drawable.ic_launcher_background);
-
             return;
         }
 
@@ -428,82 +404,65 @@ public class ThirdActivity extends AppCompatActivity {
                 .into(imgPage);
     }
 
-    // Saves current progress in SQLite
+    // Save progress locally
     private void saveCurrentProgress() {
-
-        dbHelper.saveProgress(
-                currentSurahNumber,
-                currentAyahInSurah
-        );
-
+        dbHelper.saveProgress(currentSurahNumber, currentAyahInSurah);
         updateLastProgressText();
     }
 
-    // Shows last saved progress in Arabic
+    // Show saved progress in selected language
     private void updateLastProgressText() {
-
         if (tvLastProgress != null && dbHelper != null) {
-
             String progress = dbHelper.getLastProgress();
 
-            progress = progress
-                    .replace("No Progress", "لا يوجد تقدم محفوظ")
-                    .replace("Last Read: Surah", "السورة")
-                    .replace("Ayah", "، الآية");
+            if (isArabic) {
+                progress = progress
+                        .replace("No Progress", "لا يوجد تقدم محفوظ")
+                        .replace("Last Read: Surah", "السورة")
+                        .replace("Ayah", "، الآية");
 
-            tvLastProgress.setText(
-                    "آخر موضع محفوظ: " + progress
-            );
+                tvLastProgress.setText("آخر موضع محفوظ: " + progress);
+            } else {
+                tvLastProgress.setText("Last saved progress: " + progress);
+            }
         }
     }
 
-    // Plays current ayah audio
+    // Play current ayah audio
     private void playAudio(String audioUrl) {
-
         try {
-
             if (audioUrl == null || audioUrl.isEmpty()) {
-
                 Toast.makeText(
                         this,
-                        "لم يتم تحميل الصوت بعد",
+                        isArabic ? "لم يتم تحميل الصوت بعد" : "Audio has not loaded yet",
                         Toast.LENGTH_SHORT
                 ).show();
-
                 return;
             }
 
             if (mediaPlayer != null) {
-
                 mediaPlayer.stop();
-
                 mediaPlayer.release();
             }
 
             mediaPlayer = new MediaPlayer();
-
-            mediaPlayer.setAudioStreamType(
-                    android.media.AudioManager.STREAM_MUSIC
-            );
-
+            mediaPlayer.setAudioStreamType(android.media.AudioManager.STREAM_MUSIC);
             mediaPlayer.setDataSource(audioUrl);
 
             mediaPlayer.setOnPreparedListener(mp -> {
-
                 mp.start();
 
                 Toast.makeText(
                         this,
-                        "يعمل الصوت الآن",
+                        isArabic ? "يعمل الصوت الآن" : "Audio is playing now",
                         Toast.LENGTH_SHORT
                 ).show();
             });
 
             mediaPlayer.setOnErrorListener((mp, what, extra) -> {
-
                 Toast.makeText(
                         this,
-                        "فشل تشغيل الصوت",
+                        isArabic ? "فشل تشغيل الصوت" : "Audio playback failed",
                         Toast.LENGTH_LONG
                 ).show();
 
@@ -513,17 +472,16 @@ public class ThirdActivity extends AppCompatActivity {
             mediaPlayer.prepareAsync();
 
         } catch (Exception e) {
-
             Toast.makeText(
                     this,
-                    "خطأ بالصوت: " + e.getMessage(),
+                    isArabic ? "خطأ بالصوت: " + e.getMessage() : "Audio error: " + e.getMessage(),
                     Toast.LENGTH_LONG
             ).show();
         }
     }
-    // Convert English numbers to Arabic numbers
-    private String toArabicNumbers(int number) {
 
+    // Convert English digits to Arabic digits
+    private String toArabicNumbers(int number) {
         return String.valueOf(number)
                 .replace("0", "٠")
                 .replace("1", "١")
@@ -536,17 +494,14 @@ public class ThirdActivity extends AppCompatActivity {
                 .replace("8", "٨")
                 .replace("9", "٩");
     }
+
     @Override
     protected void onDestroy() {
-
         super.onDestroy();
 
-        // Stop delayed repetition tasks
         handler.removeCallbacksAndMessages(null);
 
-        // Release audio resources
         if (mediaPlayer != null) {
-
             mediaPlayer.release();
         }
     }

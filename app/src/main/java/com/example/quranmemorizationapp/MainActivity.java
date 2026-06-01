@@ -2,6 +2,7 @@ package com.example.quranmemorizationapp;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -54,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
                 dbHelper.getVersesInRange(1, 2);
 
         for (Verse v : rangeVerses) {
-
             Log.d("RANGE_VERSE", v.textAr);
         }
 
@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d("PROGRESS", progress);
 
+        // Open memorization control page
         btnStart.setOnClickListener(view ->
-
                 startActivity(
                         new Intent(
                                 MainActivity.this,
@@ -77,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
                 )
         );
 
+        // Open about page
         btnAbout.setOnClickListener(view ->
-
                 startActivity(
                         new Intent(
                                 MainActivity.this,
@@ -87,8 +87,8 @@ public class MainActivity extends AppCompatActivity {
                 )
         );
 
+        // Open settings page
         btnSettings.setOnClickListener(view ->
-
                 startActivity(
                         new Intent(
                                 MainActivity.this,
@@ -97,8 +97,8 @@ public class MainActivity extends AppCompatActivity {
                 )
         );
 
+        // Open video library page
         btnVideoLibrary.setOnClickListener(view ->
-
                 startActivity(
                         new Intent(
                                 MainActivity.this,
@@ -110,9 +110,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-
         super.onResume();
 
+        // Update language and font whenever user returns to main page
         updateLanguage();
     }
 
@@ -123,6 +123,27 @@ public class MainActivity extends AppCompatActivity {
                         "arabicLanguage",
                         false
                 );
+
+        // Load Arabic and English fonts
+        Typeface arabicFont =
+                getResources().getFont(R.font.estedad_regular);
+
+        Typeface englishFont =
+                getResources().getFont(R.font.dynapuff_regular);
+
+        // Choose font based on selected language
+        Typeface selectedFont =
+                isArabic ? arabicFont : englishFont;
+
+        // Apply selected font to all text/buttons on this page
+        tvTitle.setTypeface(selectedFont);
+        tvSubtitle.setTypeface(selectedFont);
+        tvBottomText.setTypeface(selectedFont);
+
+        btnStart.setTypeface(selectedFont);
+        btnAbout.setTypeface(selectedFont);
+        btnSettings.setTypeface(selectedFont);
+        btnVideoLibrary.setTypeface(selectedFont);
 
         if (isArabic) {
 
@@ -224,7 +245,6 @@ public class MainActivity extends AppCompatActivity {
                 dbHelper.getAllVerses();
 
         for (Verse v : verses) {
-
             Log.d("VERSE", v.textAr);
         }
     }

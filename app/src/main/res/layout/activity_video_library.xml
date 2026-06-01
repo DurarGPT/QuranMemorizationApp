@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -11,7 +12,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Back button -->
+        <!-- Back Button -->
+
         <Button
             android:id="@+id/btnBack"
             android:layout_width="wrap_content"
@@ -22,9 +24,12 @@
             android:textColor="@color/text_light"
             android:background="@drawable/rounded_button"
             android:layout_gravity="start"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp" />
+
+        <!-- Page Title -->
 
         <TextView
+            android:id="@+id/tvLibraryTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="مكتبة الفيديوهات"
@@ -34,7 +39,10 @@
             android:gravity="center"
             android:layout_marginBottom="20dp" />
 
+        <!-- Page Subtitle -->
+
         <TextView
+            android:id="@+id/tvLibrarySubtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="فيديوهات تعليمية قصيرة تساعد الطفل على الحفظ بطريقة ممتعة"
@@ -44,6 +52,7 @@
             android:layout_marginBottom="24dp" />
 
         <!-- Video 1 -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -53,6 +62,7 @@
             android:layout_marginBottom="16dp">
 
             <TextView
+                android:id="@+id/tvVideoTitle1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="تعلم سورة الفاتحة"
@@ -61,6 +71,7 @@
                 android:textColor="#1F3D2B" />
 
             <TextView
+                android:id="@+id/tvVideoDesc1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="شرح قصير ومبسط للأطفال"
@@ -77,6 +88,7 @@
         </LinearLayout>
 
         <!-- Video 2 -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -86,6 +98,7 @@
             android:layout_marginBottom="16dp">
 
             <TextView
+                android:id="@+id/tvVideoTitle2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="تعلم سورة الإخلاص"
@@ -94,6 +107,7 @@
                 android:textColor="#1F3D2B" />
 
             <TextView
+                android:id="@+id/tvVideoDesc2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="تحفيظ سهل للأطفال"
@@ -110,6 +124,7 @@
         </LinearLayout>
 
         <!-- Video 3 -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -119,6 +134,7 @@
             android:layout_marginBottom="16dp">
 
             <TextView
+                android:id="@+id/tvVideoTitle3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="تعلم سورة الفلق"
@@ -127,6 +143,7 @@
                 android:textColor="#1F3D2B" />
 
             <TextView
+                android:id="@+id/tvVideoDesc3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="تكرار ممتع للأطفال"
@@ -143,6 +160,7 @@
         </LinearLayout>
 
         <!-- Video 4 -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -151,6 +169,7 @@
             android:padding="16dp">
 
             <TextView
+                android:id="@+id/tvVideoTitle4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="تعلم سورة الناس"
@@ -159,6 +178,7 @@
                 android:textColor="#1F3D2B" />
 
             <TextView
+                android:id="@+id/tvVideoDesc4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="تعليم وتحفيظ للأطفال"

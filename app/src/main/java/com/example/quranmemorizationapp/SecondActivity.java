@@ -1,6 +1,7 @@
 package com.example.quranmemorizationapp;
 
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -75,7 +76,7 @@ public class SecondActivity extends AppCompatActivity {
         // Setup repeat number picker
         setupRepeatPicker();
 
-        // Update screen language
+        // Update screen language and font
         updateLanguage();
 
         // Back button closes page
@@ -95,9 +96,33 @@ public class SecondActivity extends AppCompatActivity {
         npRepeat.setValue(3);
     }
 
-    // Change language dynamically
+    // Change language and font dynamically
     private void updateLanguage() {
 
+        // Load Arabic and English fonts
+        Typeface arabicFont =
+                getResources().getFont(R.font.estedad_regular);
+
+        Typeface englishFont =
+                getResources().getFont(R.font.dynapuff_regular);
+
+        // Select font depending on language
+        Typeface selectedFont =
+                isArabic ? arabicFont : englishFont;
+
+        // Apply selected font
+        btnBack.setTypeface(selectedFont);
+        btnPlay.setTypeface(selectedFont);
+
+        tvStatus.setTypeface(selectedFont);
+        tvSecondTitle.setTypeface(selectedFont);
+        tvSecondSubtitle.setTypeface(selectedFont);
+        tvRepeatLabel.setTypeface(selectedFont);
+
+        etFromAyah.setTypeface(selectedFont);
+        etToAyah.setTypeface(selectedFont);
+
+        // Arabic mode
         if (isArabic) {
 
             btnBack.setText("← رجوع");
@@ -118,7 +143,10 @@ public class SecondActivity extends AppCompatActivity {
 
             btnPlay.setText("▶ تشغيل");
 
-        } else {
+        }
+
+        // English mode
+        else {
 
             btnBack.setText("← Back");
 
