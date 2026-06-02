@@ -1,11 +1,15 @@
 package com.example.quranmemorizationapp;
+
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +29,7 @@ import java.util.Locale;
 public class ThirdActivity extends AppCompatActivity {
 
     Button btnBack, btnPlay, btnPause, btnReplay, btnPrevious;
+    ImageButton btnMenu;
 
     TextView tvTitle, tvDisplay, tvPageInfo;
 
@@ -55,6 +60,8 @@ public class ThirdActivity extends AppCompatActivity {
         setContentView(R.layout.activity_third);
 
         btnBack = findViewById(R.id.btnBack);
+        btnMenu = findViewById(R.id.btnMenu);
+
         btnPlay = findViewById(R.id.btnPlay);
         btnPause = findViewById(R.id.btnPause);
         btnReplay = findViewById(R.id.btnReplay);
@@ -72,6 +79,7 @@ public class ThirdActivity extends AppCompatActivity {
         isArabic = sharedPreferences.getBoolean("arabicLanguage", false);
 
         updateLanguage();
+        setupMenu();
 
         try {
             startAyah = Integer.parseInt(getIntent().getStringExtra("FROM_AYAH"));
@@ -145,6 +153,34 @@ public class ThirdActivity extends AppCompatActivity {
         });
     }
 
+    private void setupMenu() {
+        btnMenu.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(this, btnMenu);
+
+            popupMenu.getMenuInflater()
+                    .inflate(R.menu.popup_menu, popupMenu.getMenu());
+
+            popupMenu.setOnMenuItemClickListener(item -> {
+                if (item.getItemId() == R.id.menuHome) {
+                    startActivity(new Intent(this, MainActivity.class));
+
+                } else if (item.getItemId() == R.id.menuAbout) {
+                    startActivity(new Intent(this, AboutActivity.class));
+
+                } else if (item.getItemId() == R.id.menuSettings) {
+                    startActivity(new Intent(this, SettingsActivity.class));
+
+                } else if (item.getItemId() == R.id.menuVideos) {
+                    startActivity(new Intent(this, VideoLibraryActivity.class));
+                }
+
+                return true;
+            });
+
+            popupMenu.show();
+        });
+    }
+
     private void updateLanguage() {
 
         Typeface arabicFont = getResources().getFont(R.font.estedad_regular);
@@ -206,22 +242,15 @@ public class ThirdActivity extends AppCompatActivity {
                         }, 1500);
 
                     } else {
-
-                        // Stop the repetition because the selected range is finished.
                         isRunning = false;
-
-                        // Save the last completed position in SQLite.
                         saveCurrentProgress();
 
-                        // Show completion text on the screen.
                         tvDisplay.setText(
                                 isArabic
                                         ? "تم الانتهاء من الحفظ!"
                                         : "Memorization completed!"
                         );
 
-                        // DURAR'S PART: Completion Dialog
-                        // This popup appears when the child finishes the memorization session.
                         showCompletionDialog();
                     }
                 }
@@ -229,38 +258,19 @@ public class ThirdActivity extends AppCompatActivity {
         }
     }
 
-    // DURAR'S PART: Dialog shown when memorization finishes.
-    // It changes its text depending on the selected app language.
     private void showCompletionDialog() {
 
         androidx.appcompat.app.AlertDialog.Builder builder =
                 new androidx.appcompat.app.AlertDialog.Builder(this);
 
         if (isArabic) {
-
             builder.setTitle("🌟 أحسنت!");
-
-            builder.setMessage(
-                    "لقد أنهيت جلسة الحفظ بنجاح"
-            );
-
-            builder.setPositiveButton(
-                    "إغلاق",
-                    (dialog, which) -> dialog.dismiss()
-            );
-
+            builder.setMessage("لقد أنهيت جلسة الحفظ بنجاح");
+            builder.setPositiveButton("إغلاق", (dialog, which) -> dialog.dismiss());
         } else {
-
             builder.setTitle("🌟 Great Job!");
-
-            builder.setMessage(
-                    "You finished this memorization session successfully"
-            );
-
-            builder.setPositiveButton(
-                    "Close",
-                    (dialog, which) -> dialog.dismiss()
-            );
+            builder.setMessage("You finished this memorization session successfully");
+            builder.setPositiveButton("Close", (dialog, which) -> dialog.dismiss());
         }
 
         builder.show();

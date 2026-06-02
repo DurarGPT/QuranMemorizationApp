@@ -1,5 +1,6 @@
 package com.example.quranmemorizationapp;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -7,7 +8,9 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.NumberPicker;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 public class SecondActivity extends AppCompatActivity {
 
     Button btnPlay, btnBack;
+    ImageButton btnMenu;
+
     NumberPicker npRepeat;
 
     TextView tvStatus, tvSecondTitle, tvSecondSubtitle, tvRepeatLabel, tvSurahLabel;
@@ -107,6 +112,7 @@ public class SecondActivity extends AppCompatActivity {
 
         btnPlay = findViewById(R.id.btnPlay);
         btnBack = findViewById(R.id.btnBack);
+        btnMenu = findViewById(R.id.btnMenu);
 
         npRepeat = findViewById(R.id.npRepeat);
 
@@ -135,9 +141,38 @@ public class SecondActivity extends AppCompatActivity {
         setupRepeatPicker();
         setupSurahSearch();
         updateLanguage();
+        setupMenu();
 
         btnBack.setOnClickListener(v -> finish());
         btnPlay.setOnClickListener(v -> startPlaying());
+    }
+
+    private void setupMenu() {
+        btnMenu.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(this, btnMenu);
+
+            popupMenu.getMenuInflater()
+                    .inflate(R.menu.popup_menu, popupMenu.getMenu());
+
+            popupMenu.setOnMenuItemClickListener(item -> {
+                if (item.getItemId() == R.id.menuHome) {
+                    startActivity(new Intent(this, MainActivity.class));
+
+                } else if (item.getItemId() == R.id.menuAbout) {
+                    startActivity(new Intent(this, AboutActivity.class));
+
+                } else if (item.getItemId() == R.id.menuSettings) {
+                    startActivity(new Intent(this, SettingsActivity.class));
+
+                } else if (item.getItemId() == R.id.menuVideos) {
+                    startActivity(new Intent(this, VideoLibraryActivity.class));
+                }
+
+                return true;
+            });
+
+            popupMenu.show();
+        });
     }
 
     private void setupSurahSearch() {

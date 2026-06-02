@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- Third screen: displays Mushaf page, current ayah, and playback controls -->
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_light">
@@ -11,129 +10,159 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp"
+        android:padding="24dp"
         android:gravity="center_horizontal">
 
-        <!-- Back button -->
-        <Button
-            android:id="@+id/btnBack"
-            android:layout_width="wrap_content"
+        <!-- Top bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="← رجوع"
-            android:textAllCaps="false"
-            android:textColor="@color/text_light"
-            android:background="@drawable/rounded_button"
-            android:layout_gravity="start"
-            android:layout_marginBottom="12dp"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="10dp">
 
-        <!-- Page title -->
+            <!-- Back button -->
+            <Button
+                android:id="@+id/btnBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="← Back"
+                android:textAllCaps="false"
+                android:textColor="@color/text_light"
+                android:background="@drawable/rounded_button"/>
+
+            <!-- Space -->
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"/>
+
+            <!-- Menu button -->
+            <ImageButton
+                android:id="@+id/btnMenu"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@android:drawable/ic_menu_more"
+                android:background="@android:color/transparent"
+                app:tint="@color/text_dark"
+                android:contentDescription="Menu"/>
+        </LinearLayout>
+
+        <!-- Title -->
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="التحكم بالحفظ"
+            android:text="Memorization Player"
             android:textColor="@color/teal_dark"
+            android:textStyle="bold"
             android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="12dp"/>
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"/>
 
-        <!-- Last saved progress -->
+        <!-- Subtitle -->
         <TextView
-            android:visibility="gone"
-            android:layout_width="match_parent"
+            android:id="@+id/tvSubtitle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="آخر موضع محفوظ: لا يوجد تقدم محفوظ"
-            android:textColor="@color/purple_main"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_marginBottom="12dp"/>
-
-        <!-- Mushaf page image -->
-        <ImageView
-            android:id="@+id/imgPage"
-            android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:adjustViewBounds="true"
-            android:background="@drawable/card_background"
-            android:contentDescription="صورة صفحة المصحف"
-            android:padding="8dp"
-            android:scaleType="fitCenter"
-            android:layout_marginBottom="4dp"/>
-
-        <!-- Page information -->
-        <TextView
-            android:id="@+id/tvPageInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="صفحة المصحف: -"
+            android:text="Listen and repeat your selected ayahs"
             android:textColor="@color/text_gray"
             android:textSize="15sp"
             android:gravity="center"
-            android:layout_marginBottom="14dp"/>
+            android:layout_marginBottom="22dp"/>
 
-        <!-- Ayah display -->
-        <TextView
-            android:id="@+id/tvDisplay"
+        <!-- Main card -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="اضغطي تشغيل للبدء"
-            android:textSize="22sp"
-            android:textColor="@color/teal_dark"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:textDirection="rtl"
-            android:textAlignment="center"
-            android:lineSpacingExtra="8dp"
-            android:layout_marginBottom="14dp"/>
+            android:orientation="vertical"
+            android:background="@drawable/card_background"
+            android:elevation="6dp"
+            android:padding="22dp">
 
-        <!-- Play current ayah/repetition -->
-        <Button
-            android:id="@+id/btnPlay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="تشغيل"
-            android:textAllCaps="false"
-            android:textSize="18sp"
-            android:textColor="@color/text_light"
-            android:background="@drawable/rounded_button"
-            android:layout_marginTop="6dp"/>
+            <!-- Mushaf page image -->
+            <ImageView
+                android:id="@+id/imgPage"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:scaleType="fitCenter"
+                android:layout_marginBottom="16dp"/>
 
-        <!-- Pause audio/repetition -->
-        <Button
-            android:id="@+id/btnPause"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="إيقاف مؤقت"
-            android:textAllCaps="false"
-            android:textSize="18sp"
-            android:textColor="@color/text_light"
-            android:background="@drawable/rounded_button"
-            android:layout_marginTop="6dp"/>
+            <!-- Page info -->
+            <TextView
+                android:id="@+id/tvPageInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Page Info"
+                android:textColor="@color/purple_main"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginBottom="18dp"/>
 
-        <!-- Replay same ayah -->
-        <Button
-            android:id="@+id/btnReplay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="إعادة تشغيل الآية"
-            android:textAllCaps="false"
-            android:textSize="18sp"
-            android:textColor="@color/text_light"
-            android:background="@drawable/rounded_button"
-            android:layout_marginTop="6dp"/>
+            <!-- Quran display -->
+            <TextView
+                android:id="@+id/tvDisplay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"
+                android:textColor="@color/teal_dark"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:lineSpacingExtra="10dp"
+                android:layout_marginBottom="24dp"/>
 
-        <!-- Go back to previous ayah -->
-        <Button
-            android:id="@+id/btnPrevious"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="الآية السابقة"
-            android:textAllCaps="false"
-            android:textSize="18sp"
-            android:textColor="@color/text_light"
-            android:background="@drawable/rounded_button"
-            android:layout_marginTop="6dp"/>
+            <!-- Play button -->
+            <Button
+                android:id="@+id/btnPlay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="▶ Play"
+                android:textAllCaps="false"
+                android:textColor="@color/text_light"
+                android:textSize="17sp"
+                android:background="@drawable/rounded_button"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- Pause button -->
+            <Button
+                android:id="@+id/btnPause"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="⏸ Pause"
+                android:textAllCaps="false"
+                android:textColor="@color/text_light"
+                android:textSize="17sp"
+                android:background="@drawable/rounded_button"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- Replay button -->
+            <Button
+                android:id="@+id/btnReplay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🔁 Replay Ayah"
+                android:textAllCaps="false"
+                android:textColor="@color/text_light"
+                android:textSize="17sp"
+                android:background="@drawable/rounded_button"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- Previous ayah -->
+            <Button
+                android:id="@+id/btnPrevious"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="⬅ Previous Ayah"
+                android:textAllCaps="false"
+                android:textColor="@color/text_light"
+                android:textSize="17sp"
+                android:background="@drawable/rounded_button"
+                android:layout_marginBottom="40dp"/>
+
+
+        </LinearLayout>
 
     </LinearLayout>
 
