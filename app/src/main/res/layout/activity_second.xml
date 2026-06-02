@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- Scrollable page -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_light">
 
-    <!-- Main vertical layout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,7 +12,6 @@
         android:padding="24dp"
         android:gravity="center_horizontal">
 
-        <!-- Back button -->
         <Button
             android:id="@+id/btnBack"
             android:layout_width="wrap_content"
@@ -26,7 +23,6 @@
             android:layout_gravity="start"
             android:layout_marginBottom="18dp"/>
 
-        <!-- Screen title -->
         <TextView
             android:id="@+id/tvSecondTitle"
             android:layout_width="wrap_content"
@@ -38,18 +34,16 @@
             android:layout_marginTop="18dp"
             android:layout_marginBottom="8dp"/>
 
-        <!-- Subtitle -->
         <TextView
             android:id="@+id/tvSecondSubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Choose your ayah range and repeat count"
+            android:text="Choose the surah, ayah range, and repeat count"
             android:textColor="@color/text_gray"
             android:textSize="15sp"
             android:gravity="center"
             android:layout_marginBottom="22dp"/>
 
-        <!-- Main card -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -58,7 +52,25 @@
             android:elevation="6dp"
             android:padding="22dp">
 
-            <!-- From ayah input -->
+            <TextView
+                android:id="@+id/tvSurahLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Choose Surah"
+                android:textColor="@color/text_dark"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"/>
+
+            <AutoCompleteTextView
+                android:id="@+id/actvSurah"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Search Surah"
+                android:singleLine="true"
+                android:completionThreshold="1"
+                android:layout_marginBottom="16dp"/>
+
             <EditText
                 android:id="@+id/etFromAyah"
                 android:layout_width="match_parent"
@@ -67,7 +79,6 @@
                 android:inputType="number"
                 android:layout_marginBottom="12dp"/>
 
-            <!-- To ayah input -->
             <EditText
                 android:id="@+id/etToAyah"
                 android:layout_width="match_parent"
@@ -76,7 +87,6 @@
                 android:inputType="number"
                 android:layout_marginBottom="18dp"/>
 
-            <!-- Repeat label -->
             <TextView
                 android:id="@+id/tvRepeatLabel"
                 android:layout_width="wrap_content"
@@ -87,14 +97,12 @@
                 android:textSize="16sp"
                 android:layout_marginBottom="8dp"/>
 
-            <!-- Repeat number picker -->
             <NumberPicker
                 android:id="@+id/npRepeat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"/>
 
-            <!-- Status text -->
             <TextView
                 android:id="@+id/tvStatus"
                 android:layout_width="match_parent"
@@ -107,7 +115,6 @@
                 android:layout_marginTop="18dp"
                 android:layout_marginBottom="18dp"/>
 
-            <!-- Start button -->
             <Button
                 android:id="@+id/btnPlay"
                 android:layout_width="match_parent"
