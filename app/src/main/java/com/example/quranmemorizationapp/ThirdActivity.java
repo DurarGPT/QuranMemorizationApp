@@ -1,5 +1,4 @@
 package com.example.quranmemorizationapp;
-
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
@@ -25,38 +24,28 @@ import java.util.Locale;
 
 public class ThirdActivity extends AppCompatActivity {
 
-    // Buttons
     Button btnBack, btnPlay, btnPause, btnReplay, btnPrevious;
 
-    // TextViews
-    TextView tvTitle, tvDisplay, tvPageInfo, tvLastProgress;
+    TextView tvTitle, tvDisplay, tvPageInfo;
 
-    // Mushaf page image
     ImageView imgPage;
 
-    // Database helper
     DBHelper dbHelper;
 
-    // Language settings
     SharedPreferences sharedPreferences;
     boolean isArabic;
 
-    // Ayah range from SecondActivity
     int startAyah, endAyah, repeatLimit;
-
-    // Current ayah information
     int currentAyah;
     int currentRepeatCount = 1;
     int currentSurahNumber = 1;
     int currentAyahInSurah = 1;
     int currentPageNumber = 1;
 
-    // Audio and repetition control
     Handler handler = new Handler();
     boolean isRunning = false;
     MediaPlayer mediaPlayer;
 
-    // Current ayah content
     String currentAudioUrl = "";
     String currentAyahText = "";
 
@@ -65,36 +54,25 @@ public class ThirdActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_third);
 
-        // Connect buttons
         btnBack = findViewById(R.id.btnBack);
         btnPlay = findViewById(R.id.btnPlay);
         btnPause = findViewById(R.id.btnPause);
         btnReplay = findViewById(R.id.btnReplay);
         btnPrevious = findViewById(R.id.btnPrevious);
 
-        // Connect TextViews
         tvTitle = findViewById(R.id.tvTitle);
         tvDisplay = findViewById(R.id.tvDisplay);
         tvPageInfo = findViewById(R.id.tvPageInfo);
-        tvLastProgress = findViewById(R.id.tvLastProgress);
 
-        // Connect image
         imgPage = findViewById(R.id.imgPage);
 
-        // Initialize database
         dbHelper = new DBHelper(this);
 
-        // Read saved language from SettingsActivity
         sharedPreferences = getSharedPreferences("QiraatiSettings", MODE_PRIVATE);
         isArabic = sharedPreferences.getBoolean("arabicLanguage", false);
 
-        // Apply correct language and font
         updateLanguage();
 
-        // Show saved progress
-        updateLastProgressText();
-
-        // Receive selected ayah range and repeat count
         try {
             startAyah = Integer.parseInt(getIntent().getStringExtra("FROM_AYAH"));
             endAyah = Integer.parseInt(getIntent().getStringExtra("TO_AYAH"));
@@ -107,17 +85,13 @@ public class ThirdActivity extends AppCompatActivity {
             currentAyah = startAyah;
         }
 
-        // Load first ayah
         loadAyahFromApi(currentAyah);
 
-        // Back button closes this screen
         btnBack.setOnClickListener(view -> finish());
 
-        // Play button starts repetition
         btnPlay.setOnClickListener(view -> {
             if (!isRunning) {
                 isRunning = true;
-
                 playAudio(currentAudioUrl);
                 runRepetitionLogic();
 
@@ -129,7 +103,6 @@ public class ThirdActivity extends AppCompatActivity {
             }
         });
 
-        // Pause button stops repetition
         btnPause.setOnClickListener(view -> {
             isRunning = false;
             handler.removeCallbacksAndMessages(null);
@@ -145,7 +118,6 @@ public class ThirdActivity extends AppCompatActivity {
             ).show();
         });
 
-        // Replay button replays the current ayah
         btnReplay.setOnClickListener(v -> {
             currentRepeatCount = 1;
             renderAyahDisplay();
@@ -158,7 +130,6 @@ public class ThirdActivity extends AppCompatActivity {
             ).show();
         });
 
-        // Previous button moves to previous ayah
         btnPrevious.setOnClickListener(v -> {
             if (currentAyah > startAyah) {
                 currentAyah--;
@@ -174,7 +145,6 @@ public class ThirdActivity extends AppCompatActivity {
         });
     }
 
-    // Apply selected language + selected font
     private void updateLanguage() {
 
         Typeface arabicFont = getResources().getFont(R.font.estedad_regular);
@@ -184,7 +154,6 @@ public class ThirdActivity extends AppCompatActivity {
         tvTitle.setTypeface(selectedFont);
         tvDisplay.setTypeface(selectedFont);
         tvPageInfo.setTypeface(selectedFont);
-        tvLastProgress.setTypeface(selectedFont);
 
         btnBack.setTypeface(selectedFont);
         btnPlay.setTypeface(selectedFont);
@@ -194,7 +163,6 @@ public class ThirdActivity extends AppCompatActivity {
 
         if (isArabic) {
             tvTitle.setText("التحكم بالحفظ");
-
             btnBack.setText("← رجوع");
             btnPlay.setText("تشغيل");
             btnPause.setText("إيقاف مؤقت");
@@ -202,7 +170,6 @@ public class ThirdActivity extends AppCompatActivity {
             btnPrevious.setText("الآية السابقة");
         } else {
             tvTitle.setText("Memorization Control");
-
             btnBack.setText("← Back");
             btnPlay.setText("Play");
             btnPause.setText("Pause");
@@ -211,7 +178,6 @@ public class ThirdActivity extends AppCompatActivity {
         }
     }
 
-    // Automatic repetition logic
     private void runRepetitionLogic() {
         if (!isRunning) return;
 
@@ -300,12 +266,10 @@ public class ThirdActivity extends AppCompatActivity {
         builder.show();
     }
 
-    // Reload current ayah
     private void updateUI() {
         loadAyahFromApi(currentAyah);
     }
 
-    // Load ayah data from SQLite first, then API for audio and fallback
     private void loadAyahFromApi(int ayahNumber) {
         boolean displayedFromSqlite = loadAyahFromSqlite(ayahNumber);
 
@@ -349,8 +313,6 @@ public class ThirdActivity extends AppCompatActivity {
                                     loadMushafPageImage(currentPageNumber);
                                     saveCurrentProgress();
                                     renderAyahDisplay();
-                                } else {
-                                    updateLastProgressText();
                                 }
 
                             } catch (Exception e) {
@@ -379,7 +341,6 @@ public class ThirdActivity extends AppCompatActivity {
         queue.add(request);
     }
 
-    // Load ayah from local SQLite database
     private boolean loadAyahFromSqlite(int ayahNumber) {
         Verse verse = dbHelper.getVerseByAyahNumber(ayahNumber);
 
@@ -399,11 +360,8 @@ public class ThirdActivity extends AppCompatActivity {
         return true;
     }
 
-    // Display ayah information based on selected language
-    // Display ayah information based on selected language
     private void renderAyahDisplay() {
 
-        // English surah names
         String[] surahNamesEnglish = {
                 "Al-Fatiha","Al-Baqarah","Aal-Imran","An-Nisa","Al-Ma'idah",
                 "Al-An'am","Al-A'raf","Al-Anfal","At-Tawbah","Yunus",
@@ -430,7 +388,6 @@ public class ThirdActivity extends AppCompatActivity {
                 "Al-Masad","Al-Ikhlas","Al-Falaq","An-Nas"
         };
 
-        // Arabic surah names
         String[] surahNamesArabic = {
                 "الفاتحة","البقرة","آل عمران","النساء","المائدة",
                 "الأنعام","الأعراف","الأنفال","التوبة","يونس",
@@ -457,25 +414,17 @@ public class ThirdActivity extends AppCompatActivity {
                 "المسد","الإخلاص","الفلق","الناس"
         };
 
-        // Select correct surah name
         String surahName;
 
         if (currentSurahNumber >= 1 && currentSurahNumber <= 114) {
-
             surahName = isArabic
                     ? surahNamesArabic[currentSurahNumber - 1]
                     : surahNamesEnglish[currentSurahNumber - 1];
-
         } else {
-
-            surahName = isArabic
-                    ? "غير معروفة"
-                    : "Unknown";
+            surahName = isArabic ? "غير معروفة" : "Unknown";
         }
 
-        // Arabic mode
         if (isArabic) {
-
             tvDisplay.setText(
                     "﴿ " + currentAyahText + " ﴾"
                             + "\n\nالسورة: " + surahName
@@ -489,11 +438,7 @@ public class ThirdActivity extends AppCompatActivity {
                             + " | الآية الحالية: " + toArabicNumbers(currentAyahInSurah)
             );
 
-        }
-
-        // English mode
-        else {
-
+        } else {
             tvDisplay.setText(
                     "﴿ " + currentAyahText + " ﴾"
                             + "\n\nSurah: " + surahName
@@ -508,7 +453,7 @@ public class ThirdActivity extends AppCompatActivity {
             );
         }
     }
-    // Load Mushaf page image from page number
+
     private void loadMushafPageImage(int pageNumber) {
         if (pageNumber <= 0) {
             imgPage.setImageResource(R.drawable.ic_launcher_background);
@@ -528,31 +473,10 @@ public class ThirdActivity extends AppCompatActivity {
                 .into(imgPage);
     }
 
-    // Save progress locally
     private void saveCurrentProgress() {
         dbHelper.saveProgress(currentSurahNumber, currentAyahInSurah);
-        updateLastProgressText();
     }
 
-    // Show saved progress in selected language
-    private void updateLastProgressText() {
-        if (tvLastProgress != null && dbHelper != null) {
-            String progress = dbHelper.getLastProgress();
-
-            if (isArabic) {
-                progress = progress
-                        .replace("No Progress", "لا يوجد تقدم محفوظ")
-                        .replace("Last Read: Surah", "السورة")
-                        .replace("Ayah", "، الآية");
-
-                tvLastProgress.setText("آخر موضع محفوظ: " + progress);
-            } else {
-                tvLastProgress.setText("Last saved progress: " + progress);
-            }
-        }
-    }
-
-    // Play current ayah audio
     private void playAudio(String audioUrl) {
         try {
             if (audioUrl == null || audioUrl.isEmpty()) {
@@ -604,7 +528,6 @@ public class ThirdActivity extends AppCompatActivity {
         }
     }
 
-    // Convert English digits to Arabic digits
     private String toArabicNumbers(int number) {
         return String.valueOf(number)
                 .replace("0", "٠")

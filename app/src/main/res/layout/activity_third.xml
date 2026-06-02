@@ -39,7 +39,7 @@
 
         <!-- Last saved progress -->
         <TextView
-            android:id="@+id/tvLastProgress"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="آخر موضع محفوظ: لا يوجد تقدم محفوظ"
