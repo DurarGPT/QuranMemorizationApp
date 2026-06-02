@@ -3,15 +3,20 @@ package com.example.quranmemorizationapp;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+//Imports Bundle, which Android uses to pass saved state data into onCreate().
 import android.widget.Button;
+//for our back button
 import android.widget.TextView;
+//bcs we have alot of text labels
 
 import androidx.appcompat.app.AppCompatActivity;
-
+// This is the About page class.
 public class AboutActivity extends AppCompatActivity {
 
+    // Back button from the XML.
     Button btnBack;
 
+    // TextViews from the XML that show the About page text.
     TextView tvAboutTitle,
             tvAboutDescription,
             tvFeaturesTitle,
@@ -21,15 +26,22 @@ public class AboutActivity extends AppCompatActivity {
             tvWhyTitle,
             tvWhyDescription;
 
+    // This stores/reads app settings like Arabic or English language.
     SharedPreferences sharedPreferences;
 
+    // This method runs when the About page opens.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Runs the original Android setup for the screen.
         super.onCreate(savedInstanceState);
+
+        // Connects this Java file to activity_about.xml.
         setContentView(R.layout.activity_about);
 
+        // Finds the back button from XML by its ID.
         btnBack = findViewById(R.id.btnBack);
 
+        // Finds each TextView from the XML by its ID.
         tvAboutTitle = findViewById(R.id.tvAboutTitle);
         tvAboutDescription = findViewById(R.id.tvAboutDescription);
         tvFeaturesTitle = findViewById(R.id.tvFeaturesTitle);
@@ -40,36 +52,47 @@ public class AboutActivity extends AppCompatActivity {
         tvWhyTitle = findViewById(R.id.tvWhyTitle);
         tvWhyDescription = findViewById(R.id.tvWhyDescription);
 
+        // Opens the saved settings file called QiraatiSettings.
         sharedPreferences =
                 getSharedPreferences(
                         "QiraatiSettings",
                         MODE_PRIVATE
                 );
 
+        // When the user clicks Back, close this page and return to the previous page.
         btnBack.setOnClickListener(view -> finish());
 
+        // Applies the correct language and font to the page.
         updateLanguage();
     }
 
+    // This method changes the page text and font based on the selected language.
     private void updateLanguage() {
 
+        // Reads if Arabic language is selected.
+        // false means English is the default if no setting was saved.
         boolean isArabic =
                 sharedPreferences.getBoolean(
                         "arabicLanguage",
                         false
                 );
 
+        // Loads the Arabic font from res/font.
         Typeface arabicFont =
                 getResources().getFont(R.font.estedad_regular);
 
+        // Loads the English font from res/font.
         Typeface englishFont =
                 getResources().getFont(R.font.dynapuff_regular);
 
+        // Chooses Arabic font if Arabic is selected, otherwise English font.
         Typeface selectedFont =
                 isArabic ? arabicFont : englishFont;
 
+        // Applies the selected font to the back button.
         btnBack.setTypeface(selectedFont);
 
+        // Applies the selected font to all text on the page.
         tvAboutTitle.setTypeface(selectedFont);
         tvAboutDescription.setTypeface(selectedFont);
         tvFeaturesTitle.setTypeface(selectedFont);
@@ -79,6 +102,7 @@ public class AboutActivity extends AppCompatActivity {
         tvWhyTitle.setTypeface(selectedFont);
         tvWhyDescription.setTypeface(selectedFont);
 
+        // If Arabic is selected, show Arabic text.
         if (isArabic) {
 
             btnBack.setText("رجوع");
@@ -112,6 +136,8 @@ public class AboutActivity extends AppCompatActivity {
             );
 
         } else {
+
+            // If Arabic is not selected, show English text.
 
             btnBack.setText("Back");
 
