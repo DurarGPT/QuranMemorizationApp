@@ -178,6 +178,8 @@ public class ThirdActivity extends AppCompatActivity {
         }
     }
 
+
+    // Rimas part:
     private void runRepetitionLogic() {
         if (!isRunning) return;
 
@@ -228,6 +230,7 @@ public class ThirdActivity extends AppCompatActivity {
             }, 8000);
         }
     }
+    // Rimas end part:
 
     // DURAR'S PART: Dialog shown when memorization finishes.
     // It changes its text depending on the selected app language.
