@@ -240,18 +240,64 @@ public class ThirdActivity extends AppCompatActivity {
                         }, 1500);
 
                     } else {
+
+                        // Stop the repetition because the selected range is finished.
                         isRunning = false;
+
+                        // Save the last completed position in SQLite.
                         saveCurrentProgress();
 
+                        // Show completion text on the screen.
                         tvDisplay.setText(
                                 isArabic
                                         ? "تم الانتهاء من الحفظ!"
                                         : "Memorization completed!"
                         );
+
+                        // DURAR'S PART: Completion Dialog
+                        // This popup appears when the child finishes the memorization session.
+                        showCompletionDialog();
                     }
                 }
             }, 8000);
         }
+    }
+
+    // DURAR'S PART: Dialog shown when memorization finishes.
+    // It changes its text depending on the selected app language.
+    private void showCompletionDialog() {
+
+        androidx.appcompat.app.AlertDialog.Builder builder =
+                new androidx.appcompat.app.AlertDialog.Builder(this);
+
+        if (isArabic) {
+
+            builder.setTitle("🌟 أحسنت!");
+
+            builder.setMessage(
+                    "لقد أنهيت جلسة الحفظ بنجاح"
+            );
+
+            builder.setPositiveButton(
+                    "إغلاق",
+                    (dialog, which) -> dialog.dismiss()
+            );
+
+        } else {
+
+            builder.setTitle("🌟 Great Job!");
+
+            builder.setMessage(
+                    "You finished this memorization session successfully"
+            );
+
+            builder.setPositiveButton(
+                    "Close",
+                    (dialog, which) -> dialog.dismiss()
+            );
+        }
+
+        builder.show();
     }
 
     // Reload current ayah
