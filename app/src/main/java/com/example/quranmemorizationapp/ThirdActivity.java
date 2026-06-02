@@ -216,31 +216,25 @@ public class ThirdActivity extends AppCompatActivity {
 
 
     // Rimas part:
-    // Controls ayah repetition and memorization flow
     private void runRepetitionLogic() {
         if (!isRunning) return;
 
         if (currentRepeatCount <= repeatLimit) {
-            // Display current ayah and play its audio
             renderAyahDisplay();
             playAudio(currentAudioUrl);
 
-           // Wait before repeating or moving to the next ayah
             handler.postDelayed(() -> {
                 if (!isRunning) return;
-                // Increase repetition count
+
                 currentRepeatCount++;
 
                 if (currentRepeatCount <= repeatLimit) {
-                    // Repeat the current ayah until the limit is reached
                     runRepetitionLogic();
                 } else {
-                    // Reset repetition counter for the next ayah
                     currentRepeatCount = 1;
-                    // Move to the next ayah in the selected range
+
                     if (currentAyah < endAyah) {
                         currentAyah++;
-                        // Load next ayah from API
                         loadAyahFromApi(currentAyah);
 
                         handler.postDelayed(() -> {
@@ -249,9 +243,7 @@ public class ThirdActivity extends AppCompatActivity {
                             }
                         }, 1500);
 
-
                     } else {
-                        // Stop memorization and save progress when completed
                         isRunning = false;
                         saveCurrentProgress();
 
@@ -260,7 +252,7 @@ public class ThirdActivity extends AppCompatActivity {
                                         ? "تم الانتهاء من الحفظ!"
                                         : "Memorization completed!"
                         );
-                        // Show completion message and dialog
+
                         showCompletionDialog();
                     }
                 }

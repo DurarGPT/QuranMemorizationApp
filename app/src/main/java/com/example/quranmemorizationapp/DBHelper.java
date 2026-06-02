@@ -15,7 +15,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public DBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
-
+    // ================= BALQEES PART =================
+// This class manages the SQLite database.
     @Override
     public void onCreate(SQLiteDatabase db) {
 
@@ -37,7 +38,9 @@ public class DBHelper extends SQLiteOpenHelper {
                         "last_ayah INTEGER)"
         );
     }
-
+    // ========== BALQEES PART ==========
+// This method updates the database when the app version changes
+// It deletes the old tables and recreates them with the new structure
     @Override
     public void onUpgrade(SQLiteDatabase db,
                           int oldVersion,
@@ -70,7 +73,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    // GET ALL VERSES
+    // GET ALL VERSES (with an arraylist)
     public ArrayList<Verse> getAllVerses() {
 
         ArrayList<Verse> list = new ArrayList<>();
@@ -147,7 +150,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return list;
     }
 
-    // GIRL 4: Get one verse from SQLite for the display screen.
+    // Get one verse from SQLite for the display screen.
     public Verse getVerseByAyahNumber(int ayahNumber) {
 
         SQLiteDatabase db = this.getReadableDatabase();
