@@ -10,49 +10,47 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class AboutActivity extends AppCompatActivity {
 
-    // Back button
     Button btnBack;
 
-    // TextViews
     TextView tvAboutTitle,
             tvAboutDescription,
             tvFeaturesTitle,
-            tvFeaturesList;
+            tvFeaturesList,
+            tvWhoWeAreTitle,
+            tvTeamNames,
+            tvWhyTitle,
+            tvWhyDescription;
 
-    // Save settings like language
     SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Connect Java file to XML layout
         setContentView(R.layout.activity_about);
 
-        // Connect button
         btnBack = findViewById(R.id.btnBack);
 
-        // Connect text views
         tvAboutTitle = findViewById(R.id.tvAboutTitle);
         tvAboutDescription = findViewById(R.id.tvAboutDescription);
         tvFeaturesTitle = findViewById(R.id.tvFeaturesTitle);
         tvFeaturesList = findViewById(R.id.tvFeaturesList);
 
-        // Load saved settings
+        tvWhoWeAreTitle = findViewById(R.id.tvWhoWeAreTitle);
+        tvTeamNames = findViewById(R.id.tvTeamNames);
+        tvWhyTitle = findViewById(R.id.tvWhyTitle);
+        tvWhyDescription = findViewById(R.id.tvWhyDescription);
+
         sharedPreferences =
                 getSharedPreferences(
                         "QiraatiSettings",
                         MODE_PRIVATE
                 );
 
-        // Back button closes page
         btnBack.setOnClickListener(view -> finish());
 
-        // Update page language and font
         updateLanguage();
     }
 
-    // Updates language and font dynamically
     private void updateLanguage() {
 
         boolean isArabic =
@@ -61,26 +59,26 @@ public class AboutActivity extends AppCompatActivity {
                         false
                 );
 
-        // Load fonts
         Typeface arabicFont =
                 getResources().getFont(R.font.estedad_regular);
 
         Typeface englishFont =
                 getResources().getFont(R.font.dynapuff_regular);
 
-        // Select font depending on language
         Typeface selectedFont =
                 isArabic ? arabicFont : englishFont;
 
-        // Apply font to all text and buttons
         btnBack.setTypeface(selectedFont);
 
         tvAboutTitle.setTypeface(selectedFont);
         tvAboutDescription.setTypeface(selectedFont);
         tvFeaturesTitle.setTypeface(selectedFont);
         tvFeaturesList.setTypeface(selectedFont);
+        tvWhoWeAreTitle.setTypeface(selectedFont);
+        tvTeamNames.setTypeface(selectedFont);
+        tvWhyTitle.setTypeface(selectedFont);
+        tvWhyDescription.setTypeface(selectedFont);
 
-        // Arabic mode
         if (isArabic) {
 
             btnBack.setText("رجوع");
@@ -101,10 +99,19 @@ public class AboutActivity extends AppCompatActivity {
                             "• تصميم مناسب للأطفال"
             );
 
-        }
+            tvWhoWeAreTitle.setText("من نحن");
 
-        // English mode
-        else {
+            tvTeamNames.setText(
+                    "دُرر • بلقيس • ريماس • روان"
+            );
+
+            tvWhyTitle.setText("لماذا صنعنا قراءتي؟");
+
+            tvWhyDescription.setText(
+                    "صممنا تطبيق قراءتي لمساعدة الأطفال على حفظ القرآن وتعلمه بطريقة سهلة وممتعة وتفاعلية."
+            );
+
+        } else {
 
             btnBack.setText("Back");
 
@@ -122,6 +129,18 @@ public class AboutActivity extends AppCompatActivity {
                             "• Dark mode support\n" +
                             "• Arabic and English support\n" +
                             "• Child-friendly design"
+            );
+
+            tvWhoWeAreTitle.setText("Who We Are");
+
+            tvTeamNames.setText(
+                    "Durar • Balqees • Rimas • Rawan"
+            );
+
+            tvWhyTitle.setText("Why We Made Qiraati");
+
+            tvWhyDescription.setText(
+                    "We created Qiraati to help children memorize and learn the Quran in a simple, enjoyable, and interactive way."
             );
         }
     }

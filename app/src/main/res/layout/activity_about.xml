@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp"
+        android:padding="20dp"
         android:gravity="center_horizontal">
 
         <Button
@@ -21,12 +21,12 @@
             android:textColor="@color/text_light"
             android:background="@drawable/rounded_button"
             android:layout_gravity="start"
-            android:layout_marginBottom="18dp"/>
+            android:layout_marginBottom="8dp"/>
 
         <ImageView
             android:id="@+id/imgAboutLogo"
-            android:layout_width="180dp"
-            android:layout_height="180dp"
+            android:layout_width="170dp"
+            android:layout_height="170dp"
             android:src="@drawable/qiraati_logo"
             android:scaleType="fitCenter"/>
 
@@ -36,11 +36,11 @@
             android:layout_height="wrap_content"
             android:text="About Qiraati"
             android:textColor="@color/teal_dark"
-            android:textSize="28sp"
+            android:textSize="26sp"
             android:textStyle="bold"
             android:gravity="center"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"/>
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="14dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,7 +48,7 @@
             android:orientation="vertical"
             android:background="@drawable/card_background"
             android:elevation="6dp"
-            android:padding="24dp">
+            android:padding="22dp">
 
             <TextView
                 android:id="@+id/tvAboutDescription"
@@ -56,10 +56,10 @@
                 android:layout_height="wrap_content"
                 android:text="Qiraati is a simple and child-friendly Quran memorization app designed to help children memorize Quran verses in a calming and enjoyable way."
                 android:textColor="@color/text_dark"
-                android:textSize="17sp"
+                android:textSize="16sp"
                 android:lineSpacingExtra="6dp"
                 android:gravity="center"
-                android:layout_marginBottom="18dp"/>
+                android:layout_marginBottom="16dp"/>
 
             <TextView
                 android:id="@+id/tvFeaturesTitle"
@@ -69,7 +69,7 @@
                 android:textColor="@color/purple_main"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="12dp"/>
+                android:layout_marginBottom="10dp"/>
 
             <TextView
                 android:id="@+id/tvFeaturesList"
@@ -77,8 +77,56 @@
                 android:layout_height="wrap_content"
                 android:text="• Ayah repetition&#10;• Easy memorization controls&#10;• Dark mode support&#10;• Arabic and English support&#10;• Child-friendly design"
                 android:textColor="@color/text_dark"
-                android:textSize="16sp"
-                android:lineSpacingExtra="8dp"/>
+                android:textSize="15sp"
+                android:lineSpacingExtra="7dp"
+                android:layout_marginBottom="16dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E5E7EB"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:id="@+id/tvWhoWeAreTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Who We Are"
+                android:textColor="@color/purple_main"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="10dp"/>
+
+            <TextView
+                android:id="@+id/tvTeamNames"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Durar • Balqees • Rimas • Rawan"
+                android:textColor="@color/text_dark"
+                android:textSize="15sp"
+                android:gravity="center"
+                android:lineSpacingExtra="6dp"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:id="@+id/tvWhyTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Why We Made Qiraati"
+                android:textColor="@color/purple_main"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="10dp"/>
+
+            <TextView
+                android:id="@+id/tvWhyDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="We created Qiraati to help children memorize and learn the Quran in a simple, enjoyable, and interactive way."
+                android:textColor="@color/text_dark"
+                android:textSize="15sp"
+                android:gravity="center"
+                android:lineSpacingExtra="6dp"/>
 
         </LinearLayout>
 
