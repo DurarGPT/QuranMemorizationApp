@@ -214,6 +214,8 @@ public class ThirdActivity extends AppCompatActivity {
         }
     }
 
+
+    // Rimas part:
     private void runRepetitionLogic() {
         if (!isRunning) return;
 
@@ -257,6 +259,7 @@ public class ThirdActivity extends AppCompatActivity {
             }, 8000);
         }
     }
+    // Rimas end part:
 
     private void showCompletionDialog() {
 
