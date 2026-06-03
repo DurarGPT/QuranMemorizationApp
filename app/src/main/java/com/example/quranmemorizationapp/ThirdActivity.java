@@ -3,6 +3,7 @@ package com.example.quranmemorizationapp;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -82,11 +84,24 @@ public class ThirdActivity extends AppCompatActivity {
         setupMenu();
 
         try {
-            startAyah = Integer.parseInt(getIntent().getStringExtra("FROM_AYAH"));
-            endAyah = Integer.parseInt(getIntent().getStringExtra("TO_AYAH"));
-            repeatLimit = Integer.parseInt(getIntent().getStringExtra("REPEAT_LIMIT"));
+            String fromAyahStr = getIntent().getStringExtra("FROM_AYAH");
+            String toAyahStr = getIntent().getStringExtra("TO_AYAH");
+            String repeatLimitStr = getIntent().getStringExtra("REPEAT_LIMIT");
+
+            startAyah = Integer.parseInt(fromAyahStr != null ? fromAyahStr : "1");
+            endAyah = Integer.parseInt(toAyahStr != null ? toAyahStr : "5");
+            repeatLimit = Integer.parseInt(repeatLimitStr != null ? repeatLimitStr : "1");
+
             currentAyah = startAyah;
+
+            // If opened from Continue Last Progress
+            // allow continuing forward instead of ending immediately
+            if (startAyah == endAyah) {
+                endAyah = 6236;
+            }
+
         } catch (Exception e) {
+
             startAyah = 1;
             endAyah = 5;
             repeatLimit = 1;
@@ -183,8 +198,8 @@ public class ThirdActivity extends AppCompatActivity {
 
     private void updateLanguage() {
 
-        Typeface arabicFont = getResources().getFont(R.font.estedad_regular);
-        Typeface englishFont = getResources().getFont(R.font.dynapuff_regular);
+        Typeface arabicFont = ResourcesCompat.getFont(this, R.font.estedad_regular);
+        Typeface englishFont = ResourcesCompat.getFont(this, R.font.dynapuff_regular);
         Typeface selectedFont = isArabic ? arabicFont : englishFont;
 
         tvTitle.setTypeface(selectedFont);
@@ -375,6 +390,39 @@ public class ThirdActivity extends AppCompatActivity {
 
     private void renderAyahDisplay() {
 
+        String surahName = getSurahName(currentSurahNumber);
+
+        if (isArabic) {
+            tvDisplay.setText(
+                    "﴿ " + currentAyahText + " ﴾"
+                            + "\n\nالسورة: " + surahName
+                            + "\nالآية: " + toArabicNumbers(currentAyahInSurah)
+                            + "\nالتكرار: " + toArabicNumbers(currentRepeatCount)
+                            + " / " + toArabicNumbers(repeatLimit)
+            );
+
+            tvPageInfo.setText(
+                    "صفحة المصحف: " + toArabicNumbers(currentPageNumber)
+                            + " | الآية الحالية: " + toArabicNumbers(currentAyahInSurah)
+            );
+
+        } else {
+            tvDisplay.setText(
+                    "﴿ " + currentAyahText + " ﴾"
+                            + "\n\nSurah: " + surahName
+                            + "\nAyah: " + currentAyahInSurah
+                            + "\nRepeat: " + currentRepeatCount
+                            + " / " + repeatLimit
+            );
+
+            tvPageInfo.setText(
+                    "Mushaf Page: " + currentPageNumber
+                            + " | Current Ayah: " + currentAyahInSurah
+            );
+        }
+    }
+
+    private String getSurahName(int number) {
         String[] surahNamesEnglish = {
                 "Al-Fatiha","Al-Baqarah","Aal-Imran","An-Nisa","Al-Ma'idah",
                 "Al-An'am","Al-A'raf","Al-Anfal","At-Tawbah","Yunus",
@@ -427,43 +475,12 @@ public class ThirdActivity extends AppCompatActivity {
                 "المسد","الإخلاص","الفلق","الناس"
         };
 
-        String surahName;
-
-        if (currentSurahNumber >= 1 && currentSurahNumber <= 114) {
-            surahName = isArabic
-                    ? surahNamesArabic[currentSurahNumber - 1]
-                    : surahNamesEnglish[currentSurahNumber - 1];
+        if (number >= 1 && number <= 114) {
+            return isArabic
+                    ? surahNamesArabic[number - 1]
+                    : surahNamesEnglish[number - 1];
         } else {
-            surahName = isArabic ? "غير معروفة" : "Unknown";
-        }
-
-        if (isArabic) {
-            tvDisplay.setText(
-                    "﴿ " + currentAyahText + " ﴾"
-                            + "\n\nالسورة: " + surahName
-                            + "\nالآية: " + toArabicNumbers(currentAyahInSurah)
-                            + "\nالتكرار: " + toArabicNumbers(currentRepeatCount)
-                            + " / " + toArabicNumbers(repeatLimit)
-            );
-
-            tvPageInfo.setText(
-                    "صفحة المصحف: " + toArabicNumbers(currentPageNumber)
-                            + " | الآية الحالية: " + toArabicNumbers(currentAyahInSurah)
-            );
-
-        } else {
-            tvDisplay.setText(
-                    "﴿ " + currentAyahText + " ﴾"
-                            + "\n\nSurah: " + surahName
-                            + "\nAyah: " + currentAyahInSurah
-                            + "\nRepeat: " + currentRepeatCount
-                            + " / " + repeatLimit
-            );
-
-            tvPageInfo.setText(
-                    "Mushaf Page: " + currentPageNumber
-                            + " | Current Ayah: " + currentAyahInSurah
-            );
+            return isArabic ? "غير معروفة" : "Unknown";
         }
     }
 
@@ -486,8 +503,13 @@ public class ThirdActivity extends AppCompatActivity {
                 .into(imgPage);
     }
 
+    // Save the user's current memorization progress
     private void saveCurrentProgress() {
-        dbHelper.saveProgress(currentSurahNumber, currentAyahInSurah);
+
+        dbHelper.saveProgress(
+                currentSurahNumber,     // current surah
+                currentAyahInSurah      // current ayah
+        );
     }
 
     private void playAudio(String audioUrl) {
@@ -507,7 +529,10 @@ public class ThirdActivity extends AppCompatActivity {
             }
 
             mediaPlayer = new MediaPlayer();
-            mediaPlayer.setAudioStreamType(android.media.AudioManager.STREAM_MUSIC);
+            mediaPlayer.setAudioAttributes(new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build());
             mediaPlayer.setDataSource(audioUrl);
 
             mediaPlayer.setOnPreparedListener(mp -> {

@@ -39,10 +39,12 @@ import org.json.JSONObject;
 // ArrayList is used because the Surah data is now loaded dynamically from the API.
 import java.util.ArrayList;
 
+import android.database.Cursor;
+
 public class SecondActivity extends AppCompatActivity {
 
     // Buttons on the screen.
-    Button btnPlay, btnBack;
+    Button btnPlay, btnBack, btnContinueProgress;
 
     // Menu button at the top of the screen.
     ImageButton btnMenu;
@@ -99,6 +101,7 @@ public class SecondActivity extends AppCompatActivity {
 
         // Connect the Java variables to the XML views using their IDs.
         btnPlay = findViewById(R.id.btnPlay);
+        btnContinueProgress = findViewById(R.id.btnContinueProgress);
         btnBack = findViewById(R.id.btnBack);
         btnMenu = findViewById(R.id.btnMenu);
 
@@ -140,6 +143,71 @@ public class SecondActivity extends AppCompatActivity {
 
         // Play button validates the inputs, then sends the user to ThirdActivity.
         btnPlay.setOnClickListener(v -> startPlaying());
+
+
+        // Continue last saved progress
+        btnContinueProgress.setOnClickListener(v -> {
+
+            DBHelper dbHelper = new DBHelper(this);
+
+            android.database.Cursor cursor =
+                    dbHelper.getLastProgress();
+
+            if (cursor != null && cursor.moveToFirst()) {
+
+                int surahNumber =
+                        cursor.getInt(
+                                cursor.getColumnIndexOrThrow("surah_number"));
+
+                int ayahNumber =
+                        cursor.getInt(
+                                cursor.getColumnIndexOrThrow("ayah_number"));
+
+                int repeatLimit =
+                        cursor.getInt(
+                                cursor.getColumnIndexOrThrow("repeat_limit"));
+
+                Intent intent =
+                        new Intent(
+                                SecondActivity.this,
+                                ThirdActivity.class
+                        );
+
+                intent.putExtra(
+                        "SURAH_NUMBER",
+                        String.valueOf(surahNumber)
+                );
+
+                intent.putExtra(
+                        "FROM_AYAH",
+                        String.valueOf(ayahNumber)
+                );
+
+                intent.putExtra(
+                        "TO_AYAH",
+                        String.valueOf(ayahNumber)
+                );
+
+                intent.putExtra(
+                        "REPEAT_LIMIT",
+                        String.valueOf(repeatLimit)
+                );
+
+                startActivity(intent);
+
+                cursor.close();
+
+            } else {
+
+                Toast.makeText(
+                        this,
+                        isArabic
+                                ? "لا يوجد تقدم محفوظ"
+                                : "No saved progress found",
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+        });
     }
 
     private void setupMenu() {
@@ -338,6 +406,7 @@ public class SecondActivity extends AppCompatActivity {
         // Apply the selected font to buttons.
         btnBack.setTypeface(selectedFont);
         btnPlay.setTypeface(selectedFont);
+        btnContinueProgress.setTypeface(selectedFont);
 
         // Apply the selected font to labels and text.
         tvStatus.setTypeface(selectedFont);
@@ -363,6 +432,7 @@ public class SecondActivity extends AppCompatActivity {
             tvRepeatLabel.setText("عدد التكرار");
             tvStatus.setText("جاهز للبدء");
             btnPlay.setText("▶ تشغيل");
+            btnContinueProgress.setText("متابعة آخر تقدم");
 
         } else {
             // Change all text to English if English mode is selected.
@@ -376,6 +446,7 @@ public class SecondActivity extends AppCompatActivity {
             tvRepeatLabel.setText("Repeat Count");
             tvStatus.setText("Ready to start");
             btnPlay.setText("▶ Play");
+            btnContinueProgress.setText("Continue Last Progress");
         }
     }
 
