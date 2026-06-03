@@ -564,4 +564,17 @@ public class ThirdActivity extends AppCompatActivity {
             mediaPlayer = null;
         }
     }
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        saveCurrentProgress();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        saveCurrentProgress();
+    }
 }
