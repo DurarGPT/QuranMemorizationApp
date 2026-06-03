@@ -9,8 +9,6 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -64,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         // BALQEES PART: load all verses from SQLite and print them in Logcat.
         loadVerses();
 
-        // BALQEES PART: test fetching verses from ayah 1 to ayah 2.
+        // BALQEES PART: test fetching verses from global ayah 1 to global ayah 2.
         ArrayList<Verse> rangeVerses =
                 dbHelper.getVersesInRange(1, 2);
 
@@ -73,15 +71,27 @@ public class MainActivity extends AppCompatActivity {
             Log.d("RANGE_VERSE", v.textAr);
         }
 
-        // Balqees part: save sample user progress locally.
-        dbHelper.saveProgress(1, 2);
+        // BALQEES PART: save sample user progress locally for testing.
+        // IMPORTANT:
+        // This line is NOT used in the final app because it would overwrite the user's real progress
+        // every time MainActivity opens. The real progress is saved in ThirdActivity.
+        // Parameters if you need to test manually:
+        // surah number, ayah number inside the surah, global ayah number, repeat limit.
+        // dbHelper.saveProgress(1, 2, 2, 3);
 
-        // Balqees part: get saved progress from database.
-        String progress =
-                dbHelper.getLastProgress();
+        // BALQEES PART: get saved progress from database.
+        DBHelper.Progress progress = dbHelper.getLastProgress();
 
-        // Balqees part: print progress in Logcat for testing.
-        Log.d("PROGRESS", progress);
+        // BALQEES PART: print progress in Logcat for testing.
+        if (progress != null) {
+            Log.d("PROGRESS",
+                    "Surah: " + progress.surahNumber +
+                            ", Global Ayah: " + progress.globalAyahNumber +
+                            ", Ayah in Surah: " + progress.ayahNumber +
+                            ", Repeat: " + progress.repeatLimit);
+        } else {
+            Log.d("PROGRESS", "No saved progress");
+        }
 
         // DURAR'S PART: Start button opens the memorization control page.
         btnStart.setOnClickListener(view ->
@@ -151,10 +161,9 @@ public class MainActivity extends AppCompatActivity {
         Typeface englishFont =
                 getResources().getFont(R.font.dynapuff_regular);
 
-
-//This is a shortcut if-statement.
-//If Arabic is selected, use Arabic font.
-//Otherwise, use English font.
+        // This is a shortcut if-statement.
+        // If Arabic is selected, use Arabic font.
+        // Otherwise, use English font.
         Typeface selectedFont =
                 isArabic ? arabicFont : englishFont;
 
@@ -217,54 +226,55 @@ public class MainActivity extends AppCompatActivity {
         // If the database already has verses, do not insert them again.
         if (dbHelper.getAllVerses().isEmpty()) {
 
-            dbHelper.insertVerse(
-                    new Verse(
-                            1,
-                            1,
-                            1,
-                            "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"
-                    )
+            // Balqees part: Insert Surah 1, Ayah 1.
+            // The first number is the global ayah number in the whole Quran.
+            dbHelper.insertOrUpdateVerse(
+                    1,
+                    1,
+                    1,
+                    1,
+                    "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"
             );
 
-            dbHelper.insertVerse(
-                    new Verse(
-                            1,
-                            2,
-                            1,
-                            "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ"
-                    )
+            // Balqees part: Insert Surah 1, Ayah 2.
+            dbHelper.insertOrUpdateVerse(
+                    2,
+                    1,
+                    2,
+                    1,
+                    "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ"
             );
 
-            dbHelper.insertVerse(
-                    new Verse(
-                            1,
-                            3,
-                            1,
-                            "الرَّحْمَٰنِ الرَّحِيمِ"
-                    )
+            // Balqees part: Insert Surah 1, Ayah 3.
+            dbHelper.insertOrUpdateVerse(
+                    3,
+                    1,
+                    3,
+                    1,
+                    "الرَّحْمَٰنِ الرَّحِيمِ"
             );
 
-            dbHelper.insertVerse(
-                    new Verse(
-                            1,
-                            4,
-                            1,
-                            "مَالِكِ يَوْمِ الدِّينِ"
-                    )
+            // Balqees part: Insert Surah 1, Ayah 4.
+            dbHelper.insertOrUpdateVerse(
+                    4,
+                    1,
+                    4,
+                    1,
+                    "مَالِكِ يَوْمِ الدِّينِ"
             );
 
-            dbHelper.insertVerse(
-                    new Verse(
-                            1,
-                            5,
-                            1,
-                            "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ"
-                    )
+            // Balqees part: Insert Surah 1, Ayah 5.
+            dbHelper.insertOrUpdateVerse(
+                    5,
+                    1,
+                    5,
+                    1,
+                    "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ"
             );
         }
     }
 
-    // balqees part:
+    // Balqees part:
     // This method fetches all verses from SQLite and prints them in Logcat.
     private void loadVerses() {
 
