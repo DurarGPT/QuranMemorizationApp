@@ -1,54 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!--
+    Third Activity layout: Memorization Player screen.
+    This version is made more compact so the buttons fit better on the phone screen.
+-->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     android:background="@color/background_light">
 
+    <!-- Main vertical container for the whole screen. -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp"
+        android:padding="18dp"
         android:gravity="center_horizontal">
 
-        <!-- Top bar -->
+        <!-- Top bar with back button and menu button. -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="6dp">
 
-            <!-- Back button -->
+            <!-- Back button. -->
             <Button
                 android:id="@+id/btnBack"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:text="← Back"
                 android:textAllCaps="false"
                 android:textColor="@color/text_light"
-                android:background="@drawable/rounded_button"/>
+                android:background="@drawable/rounded_button" />
 
-            <!-- Space -->
+            <!-- This Space pushes the menu button to the right side. -->
             <Space
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:layout_weight="1"/>
+                android:layout_weight="1" />
 
-            <!-- Menu button -->
+            <!-- Menu button. -->
             <ImageButton
                 android:id="@+id/btnMenu"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
                 android:src="@android:drawable/ic_menu_more"
                 android:background="@android:color/transparent"
                 app:tint="@color/text_dark"
-                android:contentDescription="Menu"/>
+                android:contentDescription="Menu" />
         </LinearLayout>
 
-        <!-- Title -->
+        <!-- Screen title. -->
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
@@ -56,111 +62,131 @@
             android:text="Memorization Player"
             android:textColor="@color/teal_dark"
             android:textStyle="bold"
-            android:textSize="24sp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"/>
+            android:textSize="22sp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="4dp" />
 
-        <!-- Subtitle -->
+        <!-- Short subtitle. -->
         <TextView
             android:id="@+id/tvSubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Listen and repeat your selected ayahs"
             android:textColor="@color/text_gray"
-            android:textSize="15sp"
+            android:textSize="13sp"
             android:gravity="center"
-            android:layout_marginBottom="22dp"/>
+            android:layout_marginBottom="12dp" />
 
-        <!-- Main card -->
+        <!-- Main card that contains the Mushaf image, ayah text, and controls. -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="@drawable/card_background"
             android:elevation="6dp"
-            android:padding="22dp">
+            android:padding="14dp">
 
-            <!-- Mushaf page image -->
+            <!-- Mushaf page image. Smaller height helps the buttons fit on screen. -->
             <ImageView
                 android:id="@+id/imgPage"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="115dp"
                 android:scaleType="fitCenter"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="8dp" />
 
-            <!-- Page info -->
+            <!-- Page and current ayah information. -->
             <TextView
                 android:id="@+id/tvPageInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Page Info"
                 android:textColor="@color/purple_main"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:layout_marginBottom="18dp"/>
+                android:layout_marginBottom="8dp" />
 
-            <!-- Quran display -->
+            <!-- Quran ayah display. Reduced text size and spacing makes the layout more balanced. -->
             <TextView
                 android:id="@+id/tvDisplay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"
                 android:textColor="@color/teal_dark"
-                android:textSize="28sp"
+                android:textSize="23sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:lineSpacingExtra="10dp"
-                android:layout_marginBottom="24dp"/>
+                android:lineSpacingExtra="6dp"
+                android:layout_marginBottom="14dp" />
 
-            <!-- Play button -->
-            <Button
-                android:id="@+id/btnPlay"
+            <!-- First row of buttons: Play and Pause side by side. -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="▶ Play"
-                android:textAllCaps="false"
-                android:textColor="@color/text_light"
-                android:textSize="17sp"
-                android:background="@drawable/rounded_button"
-                android:layout_marginBottom="12dp"/>
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="8dp">
 
-            <!-- Pause button -->
-            <Button
-                android:id="@+id/btnPause"
+                <!-- Play button. -->
+                <Button
+                    android:id="@+id/btnPlay"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_weight="1"
+                    android:text="▶ Play"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_light"
+                    android:textSize="14sp"
+                    android:background="@drawable/rounded_button"
+                    android:layout_marginEnd="6dp" />
+
+                <!-- Pause button. -->
+                <Button
+                    android:id="@+id/btnPause"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_weight="1"
+                    android:text="⏸ Pause"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_light"
+                    android:textSize="14sp"
+                    android:background="@drawable/rounded_button"
+                    android:layout_marginStart="6dp" />
+            </LinearLayout>
+
+            <!-- Second row of buttons: Replay and Previous side by side. -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="⏸ Pause"
-                android:textAllCaps="false"
-                android:textColor="@color/text_light"
-                android:textSize="17sp"
-                android:background="@drawable/rounded_button"
-                android:layout_marginBottom="12dp"/>
+                android:orientation="horizontal"
+                android:gravity="center">
 
-            <!-- Replay button -->
-            <Button
-                android:id="@+id/btnReplay"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="🔁 Replay Ayah"
-                android:textAllCaps="false"
-                android:textColor="@color/text_light"
-                android:textSize="17sp"
-                android:background="@drawable/rounded_button"
-                android:layout_marginBottom="12dp"/>
+                <!-- Replay current ayah button. -->
+                <Button
+                    android:id="@+id/btnReplay"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_weight="1"
+                    android:text="🔁 Replay"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_light"
+                    android:textSize="14sp"
+                    android:background="@drawable/rounded_button"
+                    android:layout_marginEnd="6dp" />
 
-            <!-- Previous ayah -->
-            <Button
-                android:id="@+id/btnPrevious"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="⬅ Previous Ayah"
-                android:textAllCaps="false"
-                android:textColor="@color/text_light"
-                android:textSize="17sp"
-                android:background="@drawable/rounded_button"
-                android:layout_marginBottom="40dp"/>
-
+                <!-- Previous ayah button. -->
+                <Button
+                    android:id="@+id/btnPrevious"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_weight="1"
+                    android:text="⬅ Previous"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_light"
+                    android:textSize="14sp"
+                    android:background="@drawable/rounded_button"
+                    android:layout_marginStart="6dp" />
+            </LinearLayout>
 
         </LinearLayout>
 

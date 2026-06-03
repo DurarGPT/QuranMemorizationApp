@@ -1,9 +1,18 @@
 package com.example.quranmemorizationapp;
 
+// Intent is used to move from this activity to another activity.
 import android.content.Intent;
+
+// SharedPreferences is used to read the user's saved settings, such as Arabic/English language.
 import android.content.SharedPreferences;
+
+// Typeface is used to change the font depending on the selected language.
 import android.graphics.Typeface;
+
+// Bundle is used by Android to pass saved activity state into onCreate().
 import android.os.Bundle;
+
+// These imports are Android UI components used in this screen.
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -14,102 +23,81 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+// AppCompatActivity is the base class for this Activity.
 import androidx.appcompat.app.AppCompatActivity;
+
+// Volley imports are used to call the AlQuran Cloud API.
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+// JSON imports are used to read the API response.
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+// ArrayList is used because the Surah data is now loaded dynamically from the API.
+import java.util.ArrayList;
 
 public class SecondActivity extends AppCompatActivity {
 
+    // Buttons on the screen.
     Button btnPlay, btnBack;
+
+    // Menu button at the top of the screen.
     ImageButton btnMenu;
 
+    // NumberPicker lets the user choose how many times the selected ayahs repeat.
     NumberPicker npRepeat;
 
+    // TextViews used for labels, title, subtitle, and status messages.
     TextView tvStatus, tvSecondTitle, tvSecondSubtitle, tvRepeatLabel, tvSurahLabel;
 
+    // EditTexts for the starting and ending ayah numbers.
     EditText etFromAyah, etToAyah;
+
+    // AutoCompleteTextView is the searchable Surah picker/dropdown.
     AutoCompleteTextView actvSurah;
 
+    // Used to read saved language settings from SettingsActivity.
     SharedPreferences sharedPreferences;
+
+    // false means English mode, true means Arabic mode.
     boolean isArabic = false;
 
+    // Stores which Surah the user selected. Index 0 means Surah 1, index 1 means Surah 2, etc.
     int selectedSurahIndex = 0;
+
+    // These store the ayah range entered by the user.
     int fromAyah = 1;
     int toAyah = 1;
 
-    String[] surahEnglish = {
-            "1. Al-Fatiha", "2. Al-Baqarah", "3. Aal-Imran", "4. An-Nisa", "5. Al-Ma'idah",
-            "6. Al-An'am", "7. Al-A'raf", "8. Al-Anfal", "9. At-Tawbah", "10. Yunus",
-            "11. Hud", "12. Yusuf", "13. Ar-Ra'd", "14. Ibrahim", "15. Al-Hijr",
-            "16. An-Nahl", "17. Al-Isra", "18. Al-Kahf", "19. Maryam", "20. Taha",
-            "21. Al-Anbiya", "22. Al-Hajj", "23. Al-Mu'minun", "24. An-Nur", "25. Al-Furqan",
-            "26. Ash-Shu'ara", "27. An-Naml", "28. Al-Qasas", "29. Al-Ankabut", "30. Ar-Rum",
-            "31. Luqman", "32. As-Sajdah", "33. Al-Ahzab", "34. Saba", "35. Fatir",
-            "36. Ya-Sin", "37. As-Saffat", "38. Sad", "39. Az-Zumar", "40. Ghafir",
-            "41. Fussilat", "42. Ash-Shura", "43. Az-Zukhruf", "44. Ad-Dukhan", "45. Al-Jathiyah",
-            "46. Al-Ahqaf", "47. Muhammad", "48. Al-Fath", "49. Al-Hujurat", "50. Qaf",
-            "51. Adh-Dhariyat", "52. At-Tur", "53. An-Najm", "54. Al-Qamar", "55. Ar-Rahman",
-            "56. Al-Waqi'ah", "57. Al-Hadid", "58. Al-Mujadilah", "59. Al-Hashr", "60. Al-Mumtahanah",
-            "61. As-Saff", "62. Al-Jumu'ah", "63. Al-Munafiqun", "64. At-Taghabun", "65. At-Talaq",
-            "66. At-Tahrim", "67. Al-Mulk", "68. Al-Qalam", "69. Al-Haqqah", "70. Al-Ma'arij",
-            "71. Nuh", "72. Al-Jinn", "73. Al-Muzzammil", "74. Al-Muddaththir", "75. Al-Qiyamah",
-            "76. Al-Insan", "77. Al-Mursalat", "78. An-Naba", "79. An-Nazi'at", "80. Abasa",
-            "81. At-Takwir", "82. Al-Infitar", "83. Al-Mutaffifin", "84. Al-Inshiqaq", "85. Al-Buruj",
-            "86. At-Tariq", "87. Al-A'la", "88. Al-Ghashiyah", "89. Al-Fajr", "90. Al-Balad",
-            "91. Ash-Shams", "92. Al-Layl", "93. Ad-Duha", "94. Ash-Sharh", "95. At-Tin",
-            "96. Al-Alaq", "97. Al-Qadr", "98. Al-Bayyinah", "99. Az-Zalzalah", "100. Al-Adiyat",
-            "101. Al-Qari'ah", "102. At-Takathur", "103. Al-Asr", "104. Al-Humazah", "105. Al-Fil",
-            "106. Quraysh", "107. Al-Ma'un", "108. Al-Kawthar", "109. Al-Kafirun", "110. An-Nasr",
-            "111. Al-Masad", "112. Al-Ikhlas", "113. Al-Falaq", "114. An-Nas"
-    };
+    // This list stores the English Surah names from the API.
+    // Example: "1. Al-Faatiha"
+    ArrayList<String> surahEnglish = new ArrayList<>();
 
-    String[] surahArabic = {
-            "١. الفاتحة", "٢. البقرة", "٣. آل عمران", "٤. النساء", "٥. المائدة",
-            "٦. الأنعام", "٧. الأعراف", "٨. الأنفال", "٩. التوبة", "١٠. يونس",
-            "١١. هود", "١٢. يوسف", "١٣. الرعد", "١٤. إبراهيم", "١٥. الحجر",
-            "١٦. النحل", "١٧. الإسراء", "١٨. الكهف", "١٩. مريم", "٢٠. طه",
-            "٢١. الأنبياء", "٢٢. الحج", "٢٣. المؤمنون", "٢٤. النور", "٢٥. الفرقان",
-            "٢٦. الشعراء", "٢٧. النمل", "٢٨. القصص", "٢٩. العنكبوت", "٣٠. الروم",
-            "٣١. لقمان", "٣٢. السجدة", "٣٣. الأحزاب", "٣٤. سبأ", "٣٥. فاطر",
-            "٣٦. يس", "٣٧. الصافات", "٣٨. ص", "٣٩. الزمر", "٤٠. غافر",
-            "٤١. فصلت", "٤٢. الشورى", "٤٣. الزخرف", "٤٤. الدخان", "٤٥. الجاثية",
-            "٤٦. الأحقاف", "٤٧. محمد", "٤٨. الفتح", "٤٩. الحجرات", "٥٠. ق",
-            "٥١. الذاريات", "٥٢. الطور", "٥٣. النجم", "٥٤. القمر", "٥٥. الرحمن",
-            "٥٦. الواقعة", "٥٧. الحديد", "٥٨. المجادلة", "٥٩. الحشر", "٦٠. الممتحنة",
-            "٦١. الصف", "٦٢. الجمعة", "٦٣. المنافقون", "٦٤. التغابن", "٦٥. الطلاق",
-            "٦٦. التحريم", "٦٧. الملك", "٦٨. القلم", "٦٩. الحاقة", "٧٠. المعارج",
-            "٧١. نوح", "٧٢. الجن", "٧٣. المزمل", "٧٤. المدثر", "٧٥. القيامة",
-            "٧٦. الإنسان", "٧٧. المرسلات", "٧٨. النبأ", "٧٩. النازعات", "٨٠. عبس",
-            "٨١. التكوير", "٨٢. الانفطار", "٨٣. المطففين", "٨٤. الانشقاق", "٨٥. البروج",
-            "٨٦. الطارق", "٨٧. الأعلى", "٨٨. الغاشية", "٨٩. الفجر", "٩٠. البلد",
-            "٩١. الشمس", "٩٢. الليل", "٩٣. الضحى", "٩٤. الشرح", "٩٥. التين",
-            "٩٦. العلق", "٩٧. القدر", "٩٨. البينة", "٩٩. الزلزلة", "١٠٠. العاديات",
-            "١٠١. القارعة", "١٠٢. التكاثر", "١٠٣. العصر", "١٠٤. الهمزة", "١٠٥. الفيل",
-            "١٠٦. قريش", "١٠٧. الماعون", "١٠٨. الكوثر", "١٠٩. الكافرون", "١١٠. النصر",
-            "١١١. المسد", "١١٢. الإخلاص", "١١٣. الفلق", "١١٤. الناس"
-    };
+    // This list stores the Arabic Surah names from the API.
+    // Example: "١. الفاتحة"
+    ArrayList<String> surahArabic = new ArrayList<>();
 
-    int[] surahAyahCounts = {
-            7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,
-            112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,
-            54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,
-            14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,
-            29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,
-            11,8,3,9,5,4,7,3,6,3,5,4,5,6
-    };
+    // This list stores how many ayahs each Surah has.
+    // Example: Al-Fatiha has 7 ayahs, so index 0 stores 7.
+    ArrayList<Integer> surahAyahCounts = new ArrayList<>();
 
-    int[] surahStartGlobalAyah = {
-            1,8,294,494,670,790,955,1161,1236,1365,1474,1597,1708,1751,1803,1902,2030,2141,2251,2349,
-            2484,2596,2674,2792,2856,2933,3160,3253,3341,3410,3470,3504,3534,3607,3661,3706,3789,3971,4059,4134,
-            4219,4273,4326,4415,4474,4511,4546,4584,4613,4631,4676,4736,4785,4847,4902,4980,5076,5105,5127,5151,
-            5164,5178,5189,5200,5218,5230,5242,5272,5324,5376,5420,5448,5476,5496,5552,5592,5623,5673,5713,5759,
-            5801,5830,5849,5885,5910,5932,5949,5968,5994,6024,6044,6059,6080,6091,6099,6107,6126,6131,6139,6147,
-            6158,6169,6177,6180,6189,6194,6198,6205,6208,6214,6217,6222,6226,6231
-    };
+    // This list stores the global ayah starting number for each Surah.
+    // This is needed because ThirdActivity uses global Quran ayah numbers.
+    // Example: Surah 1 starts at global ayah 1, Surah 2 starts at global ayah 8.
+    ArrayList<Integer> surahStartGlobalAyah = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Calls the parent Activity setup first. Android requires this.
         super.onCreate(savedInstanceState);
+
+        // Connects this Java file to activity_second.xml.
         setContentView(R.layout.activity_second);
 
+        // Connect the Java variables to the XML views using their IDs.
         btnPlay = findViewById(R.id.btnPlay);
         btnBack = findViewById(R.id.btnBack);
         btnMenu = findViewById(R.id.btnMenu);
@@ -126,34 +114,43 @@ public class SecondActivity extends AppCompatActivity {
         etToAyah = findViewById(R.id.etToAyah);
         actvSurah = findViewById(R.id.actvSurah);
 
-        sharedPreferences =
-                getSharedPreferences(
-                        "QiraatiSettings",
-                        MODE_PRIVATE
-                );
+        // Open the same settings file used in the rest of the app.
+        sharedPreferences = getSharedPreferences("QiraatiSettings", MODE_PRIVATE);
 
-        isArabic =
-                sharedPreferences.getBoolean(
-                        "arabicLanguage",
-                        false
-                );
+        // Read the saved language choice.
+        // If arabicLanguage is true, the screen becomes Arabic.
+        // If arabicLanguage is false, the screen stays English.
+        isArabic = sharedPreferences.getBoolean("arabicLanguage", false);
 
+        // Set up the repeat picker from 1 to 20.
         setupRepeatPicker();
-        setupSurahSearch();
+
+        // Apply the correct language texts and fonts before loading data.
         updateLanguage();
+
+        // Set up the popup menu navigation.
         setupMenu();
 
+        // Load Surah names and ayah counts from AlQuran Cloud API.
+        // This replaces the old hardcoded Surah arrays.
+        fetchSurahsFromApi();
+
+        // Back button closes this screen and returns to the previous screen.
         btnBack.setOnClickListener(v -> finish());
+
+        // Play button validates the inputs, then sends the user to ThirdActivity.
         btnPlay.setOnClickListener(v -> startPlaying());
     }
 
     private void setupMenu() {
+        // When the menu icon is clicked, show a popup menu.
         btnMenu.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(this, btnMenu);
 
-            popupMenu.getMenuInflater()
-                    .inflate(R.menu.popup_menu, popupMenu.getMenu());
+            // Load the menu items from res/menu/popup_menu.xml.
+            popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
 
+            // Decide what happens when each menu item is clicked.
             popupMenu.setOnMenuItemClickListener(item -> {
                 if (item.getItemId() == R.id.menuHome) {
                     startActivity(new Intent(this, MainActivity.class));
@@ -168,68 +165,193 @@ public class SecondActivity extends AppCompatActivity {
                     startActivity(new Intent(this, VideoLibraryActivity.class));
                 }
 
+                // true means the click was handled successfully.
                 return true;
             });
 
+            // Actually display the popup menu on the screen.
             popupMenu.show();
         });
     }
 
+    private void fetchSurahsFromApi() {
+        // API endpoint that returns all 114 Surahs with names and ayah counts.
+        String url = "https://api.alquran.cloud/v1/surah";
+
+        // Tell the user that the app is loading the Surah list.
+        tvStatus.setText(isArabic ? "جاري تحميل السور..." : "Loading Surahs...");
+
+        // Create a Volley request queue. This manages the internet request.
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        // Create a GET request to the API.
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.GET,
+                url,
+                null,
+                response -> {
+                    try {
+                        // The API stores the Surah list inside the "data" array.
+                        JSONArray data = response.getJSONArray("data");
+
+                        // Clear old data before adding the new API data.
+                        surahEnglish.clear();
+                        surahArabic.clear();
+                        surahAyahCounts.clear();
+                        surahStartGlobalAyah.clear();
+
+                        // This variable tracks the first global ayah number of each Surah.
+                        int globalStartAyah = 1;
+
+                        // Loop through all Surahs returned by the API.
+                        for (int i = 0; i < data.length(); i++) {
+                            JSONObject surah = data.getJSONObject(i);
+
+                            // Get Surah number, English name, Arabic name, and number of ayahs.
+                            int number = surah.getInt("number");
+                            String englishName = surah.getString("englishName");
+                            String arabicName = surah.getString("name");
+                            int ayahCount = surah.getInt("numberOfAyahs");
+
+                            // Add English display name to the English list.
+                            surahEnglish.add(number + ". " + englishName);
+
+                            // Add Arabic display name to the Arabic list using Arabic digits.
+                            surahArabic.add(toArabicNumber(number) + ". " + arabicName);
+
+                            // Store the ayah count for validation later.
+                            surahAyahCounts.add(ayahCount);
+
+                            // Store the first global ayah number of this Surah.
+                            surahStartGlobalAyah.add(globalStartAyah);
+
+                            // Prepare the start number for the next Surah.
+                            globalStartAyah += ayahCount;
+                        }
+
+                        // After the API data is ready, connect it to the searchable dropdown.
+                        setupSurahSearch();
+
+                        // Tell the user the app is ready.
+                        tvStatus.setText(isArabic ? "جاهز للبدء" : "Ready to start");
+
+                    } catch (Exception e) {
+                        // This happens if the API response is received but cannot be read correctly.
+                        Toast.makeText(
+                                this,
+                                isArabic ? "حدث خطأ في قراءة بيانات السور" : "Error reading Surah data",
+                                Toast.LENGTH_SHORT
+                        ).show();
+
+                        tvStatus.setText(isArabic ? "خطأ في تحميل السور" : "Error loading Surahs");
+                    }
+                },
+                error -> {
+                    // This happens if there is no internet or the API request fails.
+                    Toast.makeText(
+                            this,
+                            isArabic ? "تعذر تحميل السور من الإنترنت" : "Could not load Surahs from API",
+                            Toast.LENGTH_SHORT
+                    ).show();
+
+                    tvStatus.setText(isArabic ? "تأكدي من الاتصال بالإنترنت" : "Check your internet connection");
+                }
+        );
+
+        // Add the request to the queue so Volley actually runs it.
+        queue.add(request);
+    }
+
     private void setupSurahSearch() {
-        String[] currentList = isArabic ? surahArabic : surahEnglish;
+        // Choose which list should appear based on the selected language.
+        // Arabic mode = Arabic Surah names.
+        // English mode = English Surah names.
+        ArrayList<String> currentList = isArabic ? surahArabic : surahEnglish;
 
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(
-                        this,
-                        android.R.layout.simple_dropdown_item_1line,
-                        currentList
-                );
+        // Create an adapter that connects the Surah list to the AutoCompleteTextView.
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_dropdown_item_1line,
+                currentList
+        );
 
+        // Attach the adapter to the searchable Surah picker.
         actvSurah.setAdapter(adapter);
-        actvSurah.setText(currentList[0], false);
 
+        // This makes the Surah picker start showing suggestions as soon as possible.
+        // Important: the XML also supports Arabic letters, so Arabic typing can work.
+        actvSurah.setThreshold(0);
+
+        // When the user taps the Surah field, show the dropdown list.
+        // This helps because the user can choose without typing.
+        actvSurah.setOnClickListener(v -> actvSurah.showDropDown());
+
+        // When the Surah field becomes active, also show the dropdown list.
+        // This makes the picker easier to use in both Arabic and English.
+        actvSurah.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                actvSurah.showDropDown();
+            }
+        });
+
+        // If the API list is not empty, show the first Surah by default.
+        if (!currentList.isEmpty()) {
+            actvSurah.setText(currentList.get(0), false);
+            selectedSurahIndex = 0;
+        }
+
+        // This runs when the user chooses a Surah from the dropdown.
         actvSurah.setOnItemClickListener((parent, view, position, id) -> {
+            // Save the selected Surah index.
             selectedSurahIndex = position;
+
+            // Clear old ayah input because each Surah has a different ayah count.
             etFromAyah.setText("");
             etToAyah.setText("");
-            tvStatus.setText(
-                    isArabic
-                            ? "تم اختيار السورة"
-                            : "Surah selected"
-            );
+
+            // Show a confirmation message.
+            tvStatus.setText(isArabic ? "تم اختيار السورة" : "Surah selected");
         });
     }
 
     private void setupRepeatPicker() {
+        // Minimum repeat count is 1.
         npRepeat.setMinValue(1);
+
+        // Maximum repeat count is 20.
         npRepeat.setMaxValue(20);
+
+        // Default repeat count is 3.
         npRepeat.setValue(3);
     }
 
     private void updateLanguage() {
+        // Arabic font used when Arabic mode is selected.
+        Typeface arabicFont = getResources().getFont(R.font.estedad_regular);
 
-        Typeface arabicFont =
-                getResources().getFont(R.font.estedad_regular);
+        // English font used when English mode is selected.
+        Typeface englishFont = getResources().getFont(R.font.dynapuff_regular);
 
-        Typeface englishFont =
-                getResources().getFont(R.font.dynapuff_regular);
+        // Pick the correct font depending on the saved language.
+        Typeface selectedFont = isArabic ? arabicFont : englishFont;
 
-        Typeface selectedFont =
-                isArabic ? arabicFont : englishFont;
-
+        // Apply the selected font to buttons.
         btnBack.setTypeface(selectedFont);
         btnPlay.setTypeface(selectedFont);
 
+        // Apply the selected font to labels and text.
         tvStatus.setTypeface(selectedFont);
         tvSecondTitle.setTypeface(selectedFont);
         tvSecondSubtitle.setTypeface(selectedFont);
         tvRepeatLabel.setTypeface(selectedFont);
         tvSurahLabel.setTypeface(selectedFont);
 
+        // Apply the selected font to input fields.
         etFromAyah.setTypeface(selectedFont);
         etToAyah.setTypeface(selectedFont);
         actvSurah.setTypeface(selectedFont);
 
+        // Change all text to Arabic if Arabic mode is selected.
         if (isArabic) {
             btnBack.setText("← رجوع");
             tvSecondTitle.setText("📖 التحكم بالحفظ");
@@ -241,7 +363,9 @@ public class SecondActivity extends AppCompatActivity {
             tvRepeatLabel.setText("عدد التكرار");
             tvStatus.setText("جاهز للبدء");
             btnPlay.setText("▶ تشغيل");
+
         } else {
+            // Change all text to English if English mode is selected.
             btnBack.setText("← Back");
             tvSecondTitle.setText("📖 Memorization Control");
             tvSecondSubtitle.setText("Choose the surah, ayah range, and repeat count");
@@ -256,96 +380,179 @@ public class SecondActivity extends AppCompatActivity {
     }
 
     private boolean readInputs() {
+        // If the API did not load yet, the Surah lists will still be empty.
+        if (surahEnglish.isEmpty() || surahArabic.isEmpty() || surahAyahCounts.isEmpty()) {
+            Toast.makeText(
+                    this,
+                    isArabic ? "انتظري حتى يتم تحميل السور" : "Please wait until Surahs finish loading",
+                    Toast.LENGTH_SHORT
+            ).show();
+            return false;
+        }
 
+        // Get the Surah text currently written in the picker.
         String selectedSurahText = actvSurah.getText().toString().trim();
-        String[] currentList = isArabic ? surahArabic : surahEnglish;
 
+        // Choose the list that matches the current language.
+        ArrayList<String> currentList = isArabic ? surahArabic : surahEnglish;
+
+        // Reset the selected index before searching.
         selectedSurahIndex = -1;
 
-        for (int i = 0; i < currentList.length; i++) {
-            if (currentList[i].equals(selectedSurahText)) {
+        // Search for the selected Surah text inside the current language list.
+        // This makes sure the user selected a real Surah from the API list.
+        for (int i = 0; i < currentList.size(); i++) {
+            if (currentList.get(i).equals(selectedSurahText)) {
                 selectedSurahIndex = i;
                 break;
             }
         }
 
+        // If no matching Surah was found, show an error.
         if (selectedSurahIndex == -1) {
             Toast.makeText(
                     this,
-                    isArabic ? "اختاري سورة صحيحة من القائمة" : "Please choose a valid surah from the list",
+                    isArabic ? "اختاري سورة صحيحة من القائمة" : "Please choose a valid Surah from the list",
                     Toast.LENGTH_SHORT
             ).show();
             return false;
         }
 
-        String fromText =
-                etFromAyah.getText().toString().trim();
+        // Read the ayah range from the input fields.
+        String fromText = etFromAyah.getText().toString().trim();
+        String toText = etToAyah.getText().toString().trim();
 
-        String toText =
-                etToAyah.getText().toString().trim();
-
+        // Make sure the user typed both numbers.
         if (fromText.isEmpty() || toText.isEmpty()) {
             Toast.makeText(
                     this,
-                    isArabic
-                            ? "أدخلي من الآية وإلى الآية"
-                            : "Please enter From Ayah and To Ayah",
+                    isArabic ? "أدخلي من الآية وإلى الآية" : "Please enter From Ayah and To Ayah",
                     Toast.LENGTH_SHORT
             ).show();
             return false;
         }
 
-        fromAyah = Integer.parseInt(fromText);
-        toAyah = Integer.parseInt(toText);
+        try {
+            // The XML now allows Arabic digits, such as ١ ٢ ٣.
+            // Java's Integer.parseInt() only understands English digits by default.
+            // So before converting the input into integers, we convert Arabic digits to English digits.
+            fromText = convertArabicDigitsToEnglish(fromText);
+            toText = convertArabicDigitsToEnglish(toText);
 
-        int maxAyah = surahAyahCounts[selectedSurahIndex];
+            // Convert the cleaned text input into integer numbers.
+            fromAyah = Integer.parseInt(fromText);
+            toAyah = Integer.parseInt(toText);
 
+        } catch (NumberFormatException e) {
+            // This catches invalid input, such as letters instead of numbers.
+            Toast.makeText(
+                    this,
+                    isArabic ? "أدخلي أرقامًا صحيحة للآيات" : "Please enter valid ayah numbers",
+                    Toast.LENGTH_SHORT
+            ).show();
+            return false;
+        }
+
+        // Get the maximum ayah number for the selected Surah from the API data.
+        int maxAyah = surahAyahCounts.get(selectedSurahIndex);
+
+        // Make sure the entered ayahs are inside the selected Surah range.
         if (fromAyah < 1 || toAyah < 1 || fromAyah > maxAyah || toAyah > maxAyah) {
             Toast.makeText(
                     this,
-                    isArabic
-                            ? "رقم الآية خارج نطاق السورة"
-                            : "Ayah number is outside this surah range",
+                    isArabic ? "رقم الآية خارج نطاق السورة" : "Ayah number is outside this Surah range",
                     Toast.LENGTH_SHORT
             ).show();
             return false;
         }
 
+        // Make sure the start ayah is not after the end ayah.
         if (fromAyah > toAyah) {
             Toast.makeText(
                     this,
-                    isArabic
-                            ? "رقم البداية يجب أن يكون أصغر من النهاية"
-                            : "From Ayah must be smaller than To Ayah",
+                    isArabic ? "رقم البداية يجب أن يكون أصغر من النهاية" : "From Ayah must be smaller than To Ayah",
                     Toast.LENGTH_SHORT
             ).show();
             return false;
         }
 
+        // true means all inputs are valid.
         return true;
     }
 
     private void startPlaying() {
-
+        // Validate all user inputs before moving to ThirdActivity.
         if (!readInputs()) return;
 
-        int globalFromAyah =
-                surahStartGlobalAyah[selectedSurahIndex] + fromAyah - 1;
+        // Convert the Surah-local ayah number into a global Quran ayah number.
+        // ThirdActivity expects global ayah numbers, so this conversion is required.
+        int globalFromAyah = surahStartGlobalAyah.get(selectedSurahIndex) + fromAyah - 1;
+        int globalToAyah = surahStartGlobalAyah.get(selectedSurahIndex) + toAyah - 1;
 
-        int globalToAyah =
-                surahStartGlobalAyah[selectedSurahIndex] + toAyah - 1;
+        // Create an Intent to open ThirdActivity.
+        Intent intent = new Intent(SecondActivity.this, ThirdActivity.class);
 
-        android.content.Intent intent =
-                new android.content.Intent(
-                        SecondActivity.this,
-                        ThirdActivity.class
-                );
-
+        // Send selected Surah number to ThirdActivity.
+        // selectedSurahIndex starts at 0, so we add 1 to get the real Surah number.
         intent.putExtra("SURAH_NUMBER", String.valueOf(selectedSurahIndex + 1));
+
+        // Send the global ayah range to ThirdActivity.
         intent.putExtra("FROM_AYAH", String.valueOf(globalFromAyah));
         intent.putExtra("TO_AYAH", String.valueOf(globalToAyah));
+
+        // Send the repeat count chosen by the user.
         intent.putExtra("REPEAT_LIMIT", String.valueOf(npRepeat.getValue()));
 
+        // Open ThirdActivity.
         startActivity(intent);
+    }
+
+    private String convertArabicDigitsToEnglish(String input) {
+        /*
+            This method converts Arabic digits into English digits.
+
+            Example:
+            ١٢٣ becomes 123
+
+            Why we need this:
+            The user may type Arabic numbers in Arabic mode.
+            However, Integer.parseInt() expects normal English digits.
+            So we convert the digits first, then parse them safely.
+        */
+
+        return input
+                .replace("٠", "0")
+                .replace("١", "1")
+                .replace("٢", "2")
+                .replace("٣", "3")
+                .replace("٤", "4")
+                .replace("٥", "5")
+                .replace("٦", "6")
+                .replace("٧", "7")
+                .replace("٨", "8")
+                .replace("٩", "9");
+    }
+
+    private String toArabicNumber(int number) {
+        // Convert the number to English digits first.
+        String englishNumber = String.valueOf(number);
+
+        // Arabic digit symbols from 0 to 9.
+        String[] arabicDigits = {"٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"};
+
+        // StringBuilder is used to build the converted Arabic number efficiently.
+        StringBuilder result = new StringBuilder();
+
+        // Loop through every digit in the English number.
+        for (int i = 0; i < englishNumber.length(); i++) {
+            // Convert the current character into an integer digit.
+            int digit = Character.getNumericValue(englishNumber.charAt(i));
+
+            // Add the matching Arabic digit to the result.
+            result.append(arabicDigits[digit]);
+        }
+
+        // Return the final Arabic number as text.
+        return result.toString();
     }
 }

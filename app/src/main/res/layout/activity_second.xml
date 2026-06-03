@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_light">
 
+    <!-- Main container -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,6 +14,7 @@
         android:padding="24dp"
         android:gravity="center_horizontal">
 
+        <!-- Top bar -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,6 +22,7 @@
             android:gravity="center_vertical"
             android:layout_marginBottom="10dp">
 
+            <!-- Back button -->
             <Button
                 android:id="@+id/btnBack"
                 android:layout_width="wrap_content"
@@ -27,13 +30,15 @@
                 android:text="← Back"
                 android:textAllCaps="false"
                 android:textColor="@color/text_light"
-                android:background="@drawable/rounded_button"/>
+                android:background="@drawable/rounded_button" />
 
+            <!-- Space pushes menu button right -->
             <Space
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:layout_weight="1"/>
+                android:layout_weight="1" />
 
+            <!-- Menu button -->
             <ImageButton
                 android:id="@+id/btnMenu"
                 android:layout_width="48dp"
@@ -41,9 +46,10 @@
                 android:src="@android:drawable/ic_menu_more"
                 android:background="@android:color/transparent"
                 app:tint="@color/text_dark"
-                android:contentDescription="Menu"/>
+                android:contentDescription="Menu" />
         </LinearLayout>
 
+        <!-- Title -->
         <TextView
             android:id="@+id/tvSecondTitle"
             android:layout_width="wrap_content"
@@ -53,8 +59,9 @@
             android:textSize="26sp"
             android:textStyle="bold"
             android:layout_marginTop="18dp"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp" />
 
+        <!-- Subtitle -->
         <TextView
             android:id="@+id/tvSecondSubtitle"
             android:layout_width="wrap_content"
@@ -63,8 +70,9 @@
             android:textColor="@color/text_gray"
             android:textSize="15sp"
             android:gravity="center"
-            android:layout_marginBottom="22dp"/>
+            android:layout_marginBottom="22dp" />
 
+        <!-- Main card -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -73,6 +81,7 @@
             android:elevation="6dp"
             android:padding="22dp">
 
+            <!-- Surah label -->
             <TextView
                 android:id="@+id/tvSurahLabel"
                 android:layout_width="wrap_content"
@@ -81,33 +90,41 @@
                 android:textColor="@color/text_dark"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="8dp" />
 
+            <!-- Searchable Surah picker -->
             <AutoCompleteTextView
                 android:id="@+id/actvSurah"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Search Surah"
                 android:singleLine="true"
-                android:completionThreshold="1"
-                android:layout_marginBottom="16dp"/>
+                android:completionThreshold="0"
+                android:inputType="text"
+                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZابتثجحخدذرزسشصضطظعغفقكلمنهويىءآأإؤئاة ٠١٢٣٤٥٦٧٨٩0123456789."
+                android:layout_marginBottom="16dp" />
 
+            <!-- From Ayah input -->
             <EditText
                 android:id="@+id/etFromAyah"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="From Ayah"
-                android:inputType="number"
-                android:layout_marginBottom="12dp"/>
+                android:inputType="text"
+                android:digits="0123456789٠١٢٣٤٥٦٧٨٩"
+                android:layout_marginBottom="12dp" />
 
+            <!-- To Ayah input -->
             <EditText
                 android:id="@+id/etToAyah"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="To Ayah"
-                android:inputType="number"
-                android:layout_marginBottom="18dp"/>
+                android:inputType="text"
+                android:digits="0123456789٠١٢٣٤٥٦٧٨٩"
+                android:layout_marginBottom="18dp" />
 
+            <!-- Repeat label -->
             <TextView
                 android:id="@+id/tvRepeatLabel"
                 android:layout_width="wrap_content"
@@ -116,14 +133,16 @@
                 android:textColor="@color/text_dark"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="8dp" />
 
+            <!-- Repeat picker -->
             <NumberPicker
                 android:id="@+id/npRepeat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_gravity="center_horizontal" />
 
+            <!-- Status text -->
             <TextView
                 android:id="@+id/tvStatus"
                 android:layout_width="match_parent"
@@ -134,8 +153,9 @@
                 android:textStyle="bold"
                 android:gravity="center"
                 android:layout_marginTop="18dp"
-                android:layout_marginBottom="18dp"/>
+                android:layout_marginBottom="18dp" />
 
+            <!-- Start button -->
             <Button
                 android:id="@+id/btnPlay"
                 android:layout_width="match_parent"
@@ -144,7 +164,7 @@
                 android:textAllCaps="false"
                 android:textSize="17sp"
                 android:textColor="@color/text_light"
-                android:background="@drawable/rounded_button"/>
+                android:background="@drawable/rounded_button" />
 
         </LinearLayout>
 

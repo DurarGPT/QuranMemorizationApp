@@ -9,6 +9,8 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -149,6 +151,10 @@ public class MainActivity extends AppCompatActivity {
         Typeface englishFont =
                 getResources().getFont(R.font.dynapuff_regular);
 
+
+//This is a shortcut if-statement.
+//If Arabic is selected, use Arabic font.
+//Otherwise, use English font.
         Typeface selectedFont =
                 isArabic ? arabicFont : englishFont;
 

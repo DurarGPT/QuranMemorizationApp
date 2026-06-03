@@ -18,7 +18,7 @@ public class SettingsActivity extends AppCompatActivity {
     // Back button
     Button btnBack;
 
-    // Spinners
+    // Spinners (dropdown menu )
     Spinner spLanguage, spTheme;
 
     // TextViews
